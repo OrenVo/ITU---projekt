@@ -58,5 +58,6 @@ def make_session_permanent():
     app.permanent_session_lifetime = timedelta(minutes=15)
     session.modified = True
 
+
 if __name__ == '__main__':
     app.run(debug=True)

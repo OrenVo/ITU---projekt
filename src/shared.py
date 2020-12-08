@@ -66,6 +66,13 @@ def check_password(user, password):
         return False
 
 
+def key_from_val(dic: dict, val):
+    for key, value in dic.items():
+        if val == value:
+            return key
+    return None
+
+
 # User for login
 class User(UserMixin):
 

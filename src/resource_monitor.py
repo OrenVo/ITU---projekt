@@ -6,7 +6,7 @@ import time
 import psutil
 
 from collections import deque
-from src.shared import Actions, Monitor, eprint, shutdown_event
+from src.shared import Actions, Monitor, eprint, shutdown_event, key_from_val
 
 
 class ResourceChecker:
@@ -23,6 +23,14 @@ class ResourceChecker:
 
     def is_set(self):
         return self.monitor is not None
+
+    def get_stat(self):
+        dict = {
+            'user': self.user,
+            'monitor': key_from_val(Monitor, self.monitor),
+            'script': self.path,
+            'action': key_from_val(Actions, self.action)
+        }
 
     def do_action(self):
         action = Actions.get(self.action)
