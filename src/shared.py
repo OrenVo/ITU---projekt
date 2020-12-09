@@ -68,7 +68,7 @@ def check_password(user, password):
     if user_p_line:  # user found
         pass_part = user_p_line[0].split(':')[1]
         pass_part = [x for x in pass_part.split('$') if x != '']
-        p_hash = pass_part[2]
+        p_hash = pass_part[2] # TODO fails on non hashed password
         salt = pass_part[1]
         alg_id = pass_part[0]
         print(alg_id, salt, p_hash, sep=' ')
