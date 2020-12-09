@@ -16,6 +16,10 @@ class Timer:
         self.running = False    # whether timer is running or not
         self.stop = False       # whether timer should stop
 
+    @property
+    def is_running(self):
+        return self.running
+
     def set_timer(self, time_set: int):
         self.time_set = self.time_left = time_set
         self.running = False
@@ -24,12 +28,8 @@ class Timer:
     def set_action(self, action: str):
         self.action = action
 
-    def set_script(self, path: str, parameters):
+    def set_script(self, path: str):
         self.path = path
-        assert isinstance(parameters, list) or parameters is None
-        if parameters:
-            for parameter in parameters:
-                self.path += ' ' + parameter
 
     def __call__(self):
         self.start()
@@ -55,6 +55,10 @@ class Timer:
         assert action is not None
         if self.path:  # TODO maybe check if exist
             os.system(f"/bin/su -s /bin/bash -c '{self.path}' {self.user}")
+        if self.stop is True:
+            self.running = False
+            self.time_left = self.time_set
+            self.stop = False
         if action:
             shutdown_event.set()
             os.system(action)
