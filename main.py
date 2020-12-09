@@ -9,6 +9,7 @@ from src.timer import Timer, Actions
 from src.resource_monitor import ResourceChecker, Monitor
 import threading
 
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "c7d6ee3e38c6ce4c50aedeedcf622b9f"
 app.app_context().push()
@@ -17,12 +18,13 @@ login_manager.init_app(app)
 users = list_users()
 threads = list()
 
+
 @app.route("/")
 def index():
     return render_template('index.html')
 
 
-@app.route("/api/start_timer", methods=["POST"])
+@app.route("/api/timer/start", methods=["POST"])
 @login_required
 def start_timer():
     timer_data = json.loads(request.get_json(force=True))
@@ -43,7 +45,7 @@ def start_timer():
     t.run()
 
 
-@app.route("/api/stop_timer")
+@app.route("/api/timer/stop")
 @login_required
 def stop_timer():
     timer = get_timer_monitor(timers, current_user.user)
@@ -54,7 +56,16 @@ def stop_timer():
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
 
 
-@app.route("/api/start_monitor", methods=["POST"])
+@app.route("/api/timer/status")
+@login_required
+def stat_timer():
+    timer = get_timer_monitor(timers, current_user.usename)
+    if timer is None:
+        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+    return json.dumps(timer.get_stat()), 200, {'ContentType': 'application/json'}
+
+
+@app.route("/api/monitor/start", methods=["POST"])
 @login_required
 def start_monitor():
     monitor_data = json.loads(request.get_json(force=True))
@@ -77,7 +88,7 @@ def start_monitor():
     t.run()
 
 
-@app.route("/api/stop_monitor")
+@app.route("/api/monitor/stop")
 @login_required
 def stop_monitor():
     monitor = get_timer_monitor(monitors, current_user.user)
@@ -86,6 +97,15 @@ def stop_monitor():
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+
+
+@app.route("/api/monitor/status")
+@login_required
+def stat_monitor():
+    monitor = get_timer_monitor(monitors, current_user.usename)
+    if monitor is None:
+        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+    return json.dumps(monitor.get_stat()), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/logout/")
@@ -131,4 +151,16 @@ def make_session_permanent():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    from sys import argv
+    debug = True
+    host = '127.0.0.1'
+    port = 5000
+    if len(argv) > 2:
+        if '-no-debug' in argv:
+            debug = False
+        host = argv[1].split(':')[0]
+        port = int(argv[1].split(':')[1])
+    elif len(argv) == 2:
+        host = argv[1].split(':')[0]
+        port = int(argv[1].split(':')[1])
+    app.run(debug=debug, host=host, port=port)

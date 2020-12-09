@@ -25,11 +25,14 @@ class ResourceChecker:
         return self.monitor is not None
 
     def get_stat(self):
-        dict = {
+        return {
             'user': self.user,
             'monitor': key_from_val(Monitor, self.monitor),
             'script': self.path,
-            'action': key_from_val(Actions, self.action)
+            'action': key_from_val(Actions, self.action),
+            'running': self.running,
+            'value': self.monitor_value,
+            'time': self.monitor_time
         }
 
     def do_action(self):

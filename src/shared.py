@@ -3,8 +3,7 @@ import crypt
 from sys import stderr
 from psutil import process_iter
 from flask_login import UserMixin
-from resource_monitor import ResourceChecker
-from timer import Timer
+
 
 timers = list()
 monitors = list()

@@ -3,7 +3,7 @@
 import time
 import os
 
-from src.shared import Actions, shutdown_event
+from src.shared import Actions, shutdown_event, key_from_val
 
 
 class Timer:
@@ -24,6 +24,16 @@ class Timer:
         self.time_set = self.time_left = time_set
         self.running = False
         self.stop = False
+
+    def get_stat(self):
+        return {
+            'user': self.user,
+            'time_set': self.time_set,
+            'time_left': self.time_left,
+            'script': self.path,
+            'action': key_from_val(Actions, self.action),
+            'running': self.running
+        }
 
     def set_action(self, action: str):
         self.action = action
