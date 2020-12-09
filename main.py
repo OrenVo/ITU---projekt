@@ -123,7 +123,7 @@ def login():
     if check_password(username, password):
         user_to_login = None
         for user in users:
-            if user.id() == username:
+            if user.id == username:
                 user_to_login = user
                 break
         if user_to_login is not None:
