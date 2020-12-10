@@ -8,6 +8,7 @@ from src.shared import User, list_users, list_processes,  check_password, timers
 from src.timer import Timer, Actions
 from src.resource_monitor import ResourceChecker, Monitor
 import threading
+import os.path
 
 
 app = Flask(__name__)
@@ -133,6 +134,84 @@ def login():
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+
+
+@app.route("/api/permissions/view")
+@login_required
+def permissons_view():  # TODO vybrať do funkcie?
+    fname = "config/rights.conf"
+
+    if os.path.isfile(fname):
+        with open(fname) as f:
+            users = [user.rstrip() for user in f]
+        rights = dict(user.rsplit(":", 1) for user in users)
+    else:
+        if not os.path.isdir("config"):
+            os.mkdir(os.path.abspath(os.getcwd()) + "/config")
+        with open(fname, "w") as f:
+            with open("/etc/passwd") as g:
+                users = [user.rstrip() for user in g]
+            rights = {}
+            for user in users:
+                (name, trash) = user.split(":", 1)
+                f.write(name + ":" + "0" + "\n")
+                rights[name] = 0
+    return json.dumps(rights), 200, {'ContentType': 'application/json'}
+
+
+@app.route("/api/permissions/edit", methods=["POST"])
+@login_required
+def permissons_edit(username, level):
+    # TODO nedokoncena
+    # TODO vybrať do funkcie?
+    # TODO mám právo editovať?
+
+    fname = "config/rights.conf"
+
+    if os.path.isfile(fname):
+        with open(fname) as f:
+            users = [user.rstrip() for user in f]
+        rights = dict(user.rsplit(":", 1) for user in users)
+    else:
+        if not os.path.isdir("config"):
+            os.mkdir(os.path.abspath(os.getcwd()) + "/config")
+        with open(fname, "w") as f:
+            with open("/etc/passwd") as g:
+                users = [user.rstrip() for user in g]
+            rights = {}
+            for user in users:
+                (name, trash) = user.split(":", 1)
+                f.write(name + ":" + "0" + "\n")
+                rights[name] = 0
+
+    if rights.get(username) is not None:
+        rights[username] = level
+    if rights.get("root") is not None:
+        rights["root"] = 0
+        if username == "root" and level != 0:
+            return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # TODO
+    pass
 
 
 @login_manager.user_loader
