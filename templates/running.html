@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+<!-- HEAD -->
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="running_style.css" type="text/css"/>
+  <title>Web app</title>
+</head>
+
+<!-- BODY -->
+<body>
+    <!-- HEADER -->
+    <header id="h">
+        <div class="title">
+            Ultimate Shutdown tool 9000 eXtra
+        </div>
+
+        <div class="header_settings">
+            <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
+        </div>            
+    </header>
+
+     <!-- BACKGROUND -->
+    <div class="background_picture">
+        <!-- Running procccess -->
+        <div class="run_proc" id="rp">
+
+        </div>
+    </div>
+</body>
+
+<script>
+    function dark_mode_toggle()
+    {
+        document.getElementById("h").classList.toggle("dark-mode-h");
+        document.getElementById("rp").classList.toggle("dark-mode");
+        document.getElementById("dm_btn").classList.toggle("bgc_1");
+    }
+</script>
+</html>

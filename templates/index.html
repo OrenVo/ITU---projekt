@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="index_style.css" type="text/css"/>
+        <title>Index</title>
+    </head>
+
+    <body>
+
+        
+
+        <header id="h">
+            <div class="title">
+                Ultimate Shutdown tool 9000 eXtra
+            </div>
+            
+            <div class="header_settings">
+                <a href="#">
+                    <div id="info"></div>
+                </a>         
+                <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
+                <button>Logout</button>
+                
+            </div>            
+        </header>
+
+        <!-- BACKGROUND -->
+        <div class="background_picture">        
+
+        <!-- QUICK SETTINGS -->
+        <div id="quick_start">
+            <div class="quick_start_container" id="qsc">
+                <!-- Header -->
+                <div class="quick_start_row h1">
+                    <h1>Quick Start</h1>
+                </div>
+                <!-- FORM -->
+                <form action="#" id="form_quick_start">            
+                    <!-- Type -->
+                    <div class="quick_start_row">
+                        <label for="type"><b>Choose type</b></label><br>
+
+                        <input type="radio" name="type" id="timer1" value="timer1">
+                        <label for="timer1">Execute at</label><br>
+
+                        <input type="radio" name="type" id="timer2" value="timer2">
+                        <label for="timer2">Execute from</label>
+                    </div>
+                    <!-- Time input -->
+                    <div class="quick_start_row">
+                        <label for="time"><b>Set time</b></label><br>
+                        <input type="time" id="time" name="time">
+                    </div>
+                    <!-- Action -->
+                    <div class="quick_start_row">
+                        <label for="action"><b>Select action</b></label><br>
+
+                        <select name="action" id="action">
+                            <option value="shutdown">Shut down</option>
+                            <option value="lock">Lock</option>
+                            <option value="restart">Restart</option>
+                        </select>
+                    </div>
+                    <!-- Launch button -->
+                    <div class="quick_start_row">
+                        <a href="#">
+                            <div id="on-off"></div>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ADVANCED SETTINGS -->
+        <div id="advanced_settings">
+            <div class="advanced_settings_container" id="asc">
+                <!-- Header -->
+                <div class="advanced_settings_row h1">
+                    <h1>Advanced Settings</h1>
+                </div>
+                <!-- FORM -->
+                <form action="#" id="form_advanced_settings">
+                    <!-- CPU -->
+                    <div class="advanced_settings_row">
+                        When CPU load drops below: 
+                        <input type="number" id="cpu_num" name="cpu_num" placeholder="Percentage">
+                        % for
+                        <input type="time" id="cpu_time" name="cpu_time">
+                    </div>
+                    <!-- RAM -->
+                    <div class="advanced_settings_row">
+                        When RAM load drops below: 
+                        <input type="number" placeholder="Percentage">
+                        % for
+                        <input type="time" id="ram_time" name="ram_time">
+                    </div>
+                    <!-- Network -->
+                    <div class="advanced_settings_row">
+                        When network transfer drops below:
+                        <input type="number" name="net_num" id="net_num" placeholder="kB">
+                        kb/s for 
+                        <input type="time" name="net_time" id="net_time">
+                    </div>
+                    <!-- Proccess -->
+                    <div class="advanced_settings_row">
+                        <label for="proccess">Choose Proccess</label><br>
+                        <select name="proccess" id="proccess">
+                            <option value="proccess1">Proccess1</option>
+                            <option value="proccess2">Proccess2</option>
+                        </select>
+                    </div>
+                    <!-- Audio -->
+                    <div class="advanced_settings_row">
+                        When audio is not playing for 
+                        <input type="time" name="audio_time" id="audio_time">
+                    </div>
+                    <!-- Screen saver -->
+                    <div class="advanced_settings_row">
+                        When display is in screen saver mode for 
+                        <input type="time" name="screen_time" id="screen_time">
+                    </div>
+                    <!-- Sumbit -->
+                    <div class="advanced_settings_row">
+                        <button>Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+    </body>
+
+    <script>
+        function dark_mode_toggle()
+        {
+            document.getElementById("qsc").classList.toggle("dark-mode");
+            document.getElementById("asc").classList.toggle("dark-mode");
+            document.getElementById("h").classList.toggle("dark-mode-h");
+            document.getElementById("dm_btn").classList.toggle("bgc_1");
+        }
+    </script>
+</html>
