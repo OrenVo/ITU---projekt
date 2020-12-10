@@ -94,7 +94,7 @@ header {
 
     float: left;
 
-    background-image: url("pictures/backpic.jpg");
+    background-image: url(../pictures/backpic.jpg);
     background-color: #cccccc;
     background-position: center;
     background-repeat: no-repeat;

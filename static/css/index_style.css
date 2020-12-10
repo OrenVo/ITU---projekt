@@ -117,13 +117,13 @@ header {
     position: absolute;
     left: 0;
 
-    background-image: url(pictures/info1.png);
+    background-image: url(../pictures/info1.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 #info:hover, #info:active {
-    background-image: url(pictures/info2.png);
+    background-image: url(../pictures/info2.png);
 }
 
 /* QUICK SETTINGS */
@@ -165,7 +165,7 @@ header {
     display: table;
     margin: 0 auto;
 
-    background-image: url(pictures/on1.png);
+    background-image: url(../pictures/on1.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
@@ -174,7 +174,7 @@ header {
     display: block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    background-image: url(pictures/on2.png);
+    background-image: url(../pictures/on2.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
@@ -237,7 +237,7 @@ header {
 
     float: left;
 
-    background-image: url("pictures/backpic.jpg");
+    background-image: url(../pictures/backpic.jpg);
     background-color: #cccccc;
     background-position: center;
     background-repeat: no-repeat;
