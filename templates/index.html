@@ -150,6 +150,7 @@
 </script>
 
 <script type="text/javascript">
+
     window.addEventListener( "load", function () {
         function sendData() {
             const XHR = new XMLHttpRequest();
@@ -173,16 +174,6 @@
             // The data sent is what the user provided in the form
             XHR.send( FD );
         }
-
-        // START
-        // Access the form element...
-        const startform = document.getElementById( "startForm" );
-        // ...and take over its submit event.
-        startform.addEventListener( "submit", function ( event ) {
-          event.preventDefault();
-        
-          sendData();
-        } );
 
         // ADVANCED SETTINGS 
         const settingsform = document.getElementById("settingsForm");

@@ -35,7 +35,7 @@
                 <label for="password">Password</label><br><br>
                 <input type="password" name="password" id="password" autocomplete="current-password" placeholder="Enter password..." required><br><br>
 
-                <button type="submit" onclick="form_to_json()">Login</button>
+                <button type="submit">Login</button>
               </div>
           </form>
       </div>
@@ -96,40 +96,5 @@
     document.getElementById("lf").classList.toggle("dark-mode");
     document.getElementById("dm_btn").classList.toggle("bgc_1");
   }
-</script>
-
-<!-- LOGIN FORM -->
-<script type="text/javascript">
-  /* Creates http request object */
-  function createXmlHttpRequestObject() {
-  var xmlhttp;
-  try {
-    xmlHttp = new XMLHttpRequest(); //should work on all browsers except IE6 or older
-  } catch (e) { 
-    try {
-      xmlHttp = new ActiveXObject("Microsoft.XMLHttp"); //browser is IE6 or older
-    } catch (e) {
-      // ignore error
-    }
-  }
-  if (!xmlHttp) {
-    alert ("Error creating the XMLHttpRequest object.");
-  } else {
-    return xmlHttp;
-  }
-}
-
-  // Called on submit
-  function form_to_json()
-  {
-    var formData = JSON.stringify($("#loginForm").serializeArray());
-    var request = createXmlHttpRequestObject();
-
-    request.open("POST", "server", true);
-    request.setRequestHeader("Content-Type", "application/json;");    // Setting header
-    request.send(formData);                                           // Sending data
-  }
-  
-
 </script>
 </html>
