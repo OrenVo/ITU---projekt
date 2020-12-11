@@ -165,6 +165,7 @@ header {
 
     display: table;
     margin: 0 auto;
+    cursor: pointer;
 
     background-image: url(../pictures/on1.png);
     background-repeat: no-repeat;

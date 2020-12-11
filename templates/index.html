@@ -46,10 +46,9 @@
                         <label for="timer2" id="radio_timer2">Execute from</label>
                     </div>
                     <!-- Time input -->
-                    <!-- TODO validacia formatu -->
                     <div class="quick_start_row">
                         <label for="time"><b>Set time</b></label><br>
-                        <input type="text" id="time" name="time" placeholder="12:00:00" required>
+                        <input type="text" id="time" name="time" placeholder="hh:mm:ss" required>
                     </div>
                     <!-- Action -->
                     <div class="quick_start_row">
@@ -63,10 +62,10 @@
                     </div>
                     <!-- Launch button -->
                     <div class="quick_start_row">
-                        <a onclick="sendForm()">
+                        <a onclick="formToJson()">
                             <div id="on-off"></div>
                         </a>
-                        <!--<button type="submit" onclick="sendForm()">Launch</button>-->
+                        <!--<button type="submit" onclick="formToJson()">Launch</button>-->
                     </div>
                 </form>
             </div>
@@ -140,7 +139,88 @@
 
 <!-- FORM JSON START -->
 <script type="text/javascript">
-    function sendForm() 
+    /* Create HTTP request */
+    function createXmlHttpRequestObject() {
+      var xmlhttp;
+      try {
+        xmlHttp = new XMLHttpRequest(); //should work on all browsers except IE6 or older
+      } catch (e) { 
+        try {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHttp"); //browser is IE6 or older
+        } catch (e) {
+          // ignore error
+        }
+      }
+      if (!xmlHttp) {
+        alert ("Error creating the XMLHttpRequest object.");
+      } else {
+        return xmlHttp;
+      }
+    }
+
+    /* Sending data to server */
+    function sendData(data)
+    {
+        try
+        {
+            var request = new createXmlHttpRequestObject(); // Creating request
+            request.open("POST", "#", true); // Inicializing request
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;"); // Setting header maybe /json
+            alert("Sending data to server.");
+            request.send(data); // Sending data
+        } 
+        catch (e)
+        {
+            alert(e.toString());
+        }
+    }
+
+    /* Controling and calculating time input */
+    function checkTime(time, type1)
+    {
+        /* Entered time variables*/
+        var hours = time[0] + time[1];
+        var minutes = time[3] + time[4];
+        var seconds = time[6] + time[7];
+        var enteredTime = hours * 60 * 60 + minutes * 60 + seconds * 1;
+
+        var result; // Result time which is set into object
+
+        var regex = new RegExp("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]"); // Regex for time input
+        var currentDate = new Date(); // Current date 
+        var currentTime =  currentDate.getHours() * 60 * 60    
+                        + currentDate.getMinutes() * 60  
+                        + currentDate.getSeconds() * 1;
+
+        // Control time input
+        if(enteredTime > 86400 || regex.test(time) === false)
+        {
+            return "error";
+        }
+
+        // Execute at
+        if(type1 === true)
+        { 
+            if(currentTime > enteredTime)
+            { // Entered time is lower than current time
+                result = 86400 - currentTime + enteredTime;
+            }
+            else
+            { // Entered time is higher than current time
+                result = enteredTime - currentTime;
+            }   
+
+            return result; // Return result
+        }
+        // Execute from
+        else
+        { 
+            return enteredTime; // Return entered time
+        }
+    }
+
+    /* Parsing start form to JSON */
+    function formToJson() 
     {
         var obj = {type:"", time:"", action:""}; // JS object
 
@@ -148,82 +228,43 @@
         var type2 = document.getElementById("timer2");  // Input for type2
 
         var time = document.getElementById("time"); // Input for time
-        var regex = new RegExp("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]"); // Regex for time input
-        var currentDate = new Date(); // Current date 
-        var currentTime =  currentDate.getHours() * 60 * 60    
-                        + currentDate.getMinutes() * 60  
-                        + currentDate.getSeconds() * 1;
-
 
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
         /* Type */
         if(type1.checked === false && type2.checked === false)
         { // Type is not set
-            alert("Choose type.");
+            return alert("Choose type!");
         }
         else if(type1.checked === true)
         { // Type 1 is set
-            alert("type1 checked");
             obj.type = "type1";
         }
         else 
         { // Type 2 is set
-            alert("type2 checked");
             obj.type = "type2";
         }
 
         /* Time */
-        if(time.value === "")
-        { // Time not set
-            alert("Enter time.");
+        var time_result = checkTime(time.value, type1.checked);
+        if(time_result === "error")
+        {
+           return alert("Enter a valid time! Format: hh:mm:ss ");           
         }
-        else
-        { // Timse is set
-            if(regex.test(time.value) === false)
-            { // Wrong time input
-                alert("Enter a valid time! Format: hh:mm:ss ");
-            }
-
-            /* Entered Time variables*/
-            var hours = time.value[0] + time.value[1];
-            var minutes = time.value[3] + time.value[4];
-            var seconds = time.value[6] + time.value[7];
-            var enteredTime = hours * 60 * 60 + minutes * 60 + seconds * 1;
-            var result; // Result time which is set into object
-
-            // Execute at
-            if(type1.checked === true)
-            { 
-                if(currentTime > enteredTime)
-                { // Entered time is lower than current time
-                    result = 86400 - currentTime + enteredTime;
-                }
-                else
-                { // Entered time is higher than current time
-                    result = enteredTime - currentTime;
-                }                
-                obj.time = result; // Set object time
-            }
-            // Execute from
-            else
-            { 
-                obj.time = enteredTime;
-            }
-        }
+        obj.time = time_result; // Set time into object
 
         /* Action */
         for (var i = 0, element; element = action_elems[i++];) 
         {
-            obj.action = element.value;
-            alert(element.value);            
+            obj.action = element.value;     
         }
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
         alert(jsonData);
 
-        // TODO send data to server
+        /* Sending data to server */
+        sendData(jsonData);
     }
 </script>
 
