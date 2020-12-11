@@ -22,7 +22,7 @@ threads = list()
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('login.html')
 
 
 @app.route("/api/timer/start", methods=["POST"])
@@ -49,7 +49,7 @@ def start_timer():
 @app.route("/api/timer/stop")
 @login_required
 def stop_timer():
-    timer = get_timer_monitor(timers, current_user.user)
+    timer = get_timer_monitor(timers, current_user.name)
     if timer:
         timer.stop = True
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
@@ -60,7 +60,7 @@ def stop_timer():
 @app.route("/api/timer/status")
 @login_required
 def stat_timer():
-    timer = get_timer_monitor(timers, current_user.usename)
+    timer = get_timer_monitor(timers, current_user.name)
     if timer is None:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     return json.dumps(timer.get_stat()), 200, {'ContentType': 'application/json'}
@@ -92,7 +92,7 @@ def start_monitor():
 @app.route("/api/monitor/stop")
 @login_required
 def stop_monitor():
-    monitor = get_timer_monitor(monitors, current_user.user)
+    monitor = get_timer_monitor(monitors, current_user.name)
     if monitor:
         monitor.stop = True
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
@@ -103,7 +103,7 @@ def stop_monitor():
 @app.route("/api/monitor/status")
 @login_required
 def stat_monitor():
-    monitor = get_timer_monitor(monitors, current_user.usename)
+    monitor = get_timer_monitor(monitors, current_user.name)
     if monitor is None:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     return json.dumps(monitor.get_stat()), 200, {'ContentType': 'application/json'}
@@ -131,7 +131,7 @@ def login():
             login_user(user_to_login)
             timers.append(Timer(user_to_login.name))
             monitors.append(ResourceChecker(user_to_login.name))
-            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'} # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
 
@@ -166,9 +166,9 @@ def permissons_view():  # TODO vybrať do funkcie?
 def permissons_edit(username, level):  # TODO vybrať do funkcie? Neotestované
     if username == "root" and level != 0:
         return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
-
+    fname = "config/rights.conf"
     if os.path.isfile(fname):
-        with open(filename, 'r+') as f:
+        with open(fname, 'r+') as f:
             users  = [user.rstrip() for user in f]
             rights = dict(user.rsplit(":", 1) for user in users)
             if rights[current_user.name] != 0:
@@ -195,7 +195,7 @@ def permissons_edit(username, level):  # TODO vybrať do funkcie? Neotestované
                 else:
                     f.write(name + ":" + "0" + "\n")
 
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @login_manager.user_loader
