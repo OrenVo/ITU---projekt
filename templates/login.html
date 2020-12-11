@@ -4,7 +4,7 @@
 <!-- HEAD -->
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css') }}" type="text/css"/>
+  <link rel="stylesheet" href="../static/css/login_style.css" type="text/css"/>
   <title>Login</title>
 </head>
 
@@ -18,9 +18,10 @@
     </div>
     
     <div class="header_settings">
+        <div id="myBtnInfo"></div>
         <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
     </div>            
-  </header>
+</header>
 
   <!-- BACKGROUND -->
   <div class="background_picture">
@@ -43,7 +44,6 @@
     <!-- INFORMATION -->
     <div class="webapp_info">
         <h1>Web Application</h1>
-        <p>For more information click <span id="myBtnInfo">here</span>.</p>
     </div>
   </div>
 

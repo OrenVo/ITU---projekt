@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}" type="text/css"/>
+        <link rel="stylesheet" href="../static/css/index_style.css" type="text/css"/>
         <title>Index</title>
     </head>
 
@@ -15,9 +15,7 @@
             </div>
             
             <div class="header_settings">
-                <a href="#">
-                    <div id="info"></div>
-                </a>         
+                <div id="myBtnInfo"></div>
                 <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
                 <a href="#">
                     <button>Logout</button>
@@ -39,24 +37,25 @@
                 <form id="startForm">            
                     <!-- Type -->
                     <div class="quick_start_row">
-                        <label for="type"><b>Choose type</b></label><br>
+                        <label for="radio"><b>Choose type</b></label><br>
 
-                        <input type="radio" name="type" id="timer1" value="timer1">
+                        <input type="radio" name="type" id="timer1" value="timer1" required>
                         <label for="timer1">Execute at</label><br>
 
                         <input type="radio" name="type" id="timer2" value="timer2">
-                        <label for="timer2">Execute from</label>
+                        <label for="timer2" id="radio_timer2">Execute from</label>
                     </div>
                     <!-- Time input -->
+                    <!-- TODO validacia formatu -->
                     <div class="quick_start_row">
                         <label for="time"><b>Set time</b></label><br>
-                        <input type="time" id="time" name="time">
+                        <input type="text" id="time" name="time" placeholder="12:00:00" required>
                     </div>
                     <!-- Action -->
                     <div class="quick_start_row">
                         <label for="action"><b>Select action</b></label><br>
 
-                        <select name="action" id="action">
+                        <select name="action" id="action" required>
                             <option value="shutdown">Shut down</option>
                             <option value="lock">Lock</option>
                             <option value="restart">Restart</option>
@@ -64,9 +63,10 @@
                     </div>
                     <!-- Launch button -->
                     <div class="quick_start_row">
-                        <a href="#">
+                        <a onclick="sendForm()">
                             <div id="on-off"></div>
                         </a>
+                        <!--<button type="submit" onclick="sendForm()">Launch</button>-->
                     </div>
                 </form>
             </div>
@@ -104,7 +104,7 @@
                     </div>
                     <!-- Proccess -->
                     <div class="advanced_settings_row">
-                        <label for="proccess">Choose Proccess</label><br>
+                        <label for="proccess"><b>Choose Proccess</b></label><br>
                         <select name="proccess" id="proccess">
                             <option value="proccess1">Proccess1</option>
                             <option value="proccess2">Proccess2</option>
@@ -122,7 +122,7 @@
                     </div>
                     <!-- Sumbit -->
                     <div class="advanced_settings_row">
-                        <button>Submit</button>
+                        <button type="submit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -138,6 +138,95 @@
         </div>
     </body>
 
+<!-- FORM JSON START -->
+<script type="text/javascript">
+    function sendForm() 
+    {
+        var obj = {type:"", time:"", action:""}; // JS object
+
+        var type1 = document.getElementById("timer1");  // Input for type1
+        var type2 = document.getElementById("timer2");  // Input for type2
+
+        var time = document.getElementById("time"); // Input for time
+        var regex = new RegExp("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]"); // Regex for time input
+        var currentDate = new Date(); // Current date 
+        var currentTime =  currentDate.getHours() * 60 * 60    
+                        + currentDate.getMinutes() * 60  
+                        + currentDate.getSeconds() * 1;
+
+
+        var action_elems = document.querySelectorAll("#startForm select"); // Action element
+
+        /* Type */
+        if(type1.checked === false && type2.checked === false)
+        { // Type is not set
+            alert("Choose type.");
+        }
+        else if(type1.checked === true)
+        { // Type 1 is set
+            alert("type1 checked");
+            obj.type = "type1";
+        }
+        else 
+        { // Type 2 is set
+            alert("type2 checked");
+            obj.type = "type2";
+        }
+
+        /* Time */
+        if(time.value === "")
+        { // Time not set
+            alert("Enter time.");
+        }
+        else
+        { // Timse is set
+            if(regex.test(time.value) === false)
+            { // Wrong time input
+                alert("Enter a valid time! Format: hh:mm:ss ");
+            }
+
+            /* Entered Time variables*/
+            var hours = time.value[0] + time.value[1];
+            var minutes = time.value[3] + time.value[4];
+            var seconds = time.value[6] + time.value[7];
+            var enteredTime = hours * 60 * 60 + minutes * 60 + seconds * 1;
+            var result; // Result time which is set into object
+
+            // Execute at
+            if(type1.checked === true)
+            { 
+                if(currentTime > enteredTime)
+                { // Entered time is lower than current time
+                    result = 86400 - currentTime + enteredTime;
+                }
+                else
+                { // Entered time is higher than current time
+                    result = enteredTime - currentTime;
+                }                
+                obj.time = result; // Set object time
+            }
+            // Execute from
+            else
+            { 
+                obj.time = enteredTime;
+            }
+        }
+
+        /* Action */
+        for (var i = 0, element; element = action_elems[i++];) 
+        {
+            obj.action = element.value;
+            alert(element.value);            
+        }
+
+        /* Create JSON string from an object */
+        var jsonData = JSON.stringify(obj);
+        alert(jsonData);
+
+        // TODO send data to server
+    }
+</script>
+
 <!-- DARK MODE JS -->
 <script type="text/javascript">
     function dark_mode_toggle()
@@ -149,15 +238,15 @@
     }
 </script>
 
+<!-- FORM JSON SETTINGS -->
 <script type="text/javascript">
-
     window.addEventListener( "load", function () {
         function sendData() {
             const XHR = new XMLHttpRequest();
 
             // Bind the FormData object and the form element
             const FD = new FormData( form );
-
+            
             // Define what happens on successful data submission
             XHR.addEventListener( "load", function(event) {
               alert( event.target.responseText );
@@ -171,8 +260,9 @@
             // Set up our request
             XHR.open( "POST", "https://example.com/cors.php" );
 
+           
             // The data sent is what the user provided in the form
-            XHR.send( FD );
+            XHR.send( FD );            
         }
 
         // ADVANCED SETTINGS 
