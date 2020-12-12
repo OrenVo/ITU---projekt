@@ -136,6 +136,33 @@ def login():
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
 
 
+@app.route("/web/login", methods=["GET", "POST"])
+def web_login():
+    if current_user.is_authenticated:
+        pass  # TODO neviem co ma urobit
+    if request.method == "GET":
+        return render_template("login.html", form=request.form)
+
+    username = request.form.get("login", None)
+    password = request.form.get("password", None)
+
+    if check_password(username, password):
+        user_to_login = None
+        for user in users:
+            if user.id == username:
+                user_to_login = user
+                break
+        if user_to_login is not None:
+            login_user(user_to_login)
+            timers.append(Timer(user_to_login.name))
+            monitors.append(ResourceChecker(user_to_login.name))
+            return render_template("home.html", form=request.form)
+        else:
+            return render_template("login.html", form=request.form)
+    else:
+        return render_template("login.html", form=request.form)
+
+    
 @app.route("/api/permissions/view")
 @login_required
 def permissons_view():  # TODO vybrať do funkcie?
