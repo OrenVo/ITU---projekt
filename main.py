@@ -134,7 +134,7 @@ def logout():
 @login_required
 def web_logout():
     logout_user()
-    return return render_template("login.html", form=request.form)
+    return render_template("login.html", form=request.form)
 
 
 @app.route("/api/login", methods=["POST"])
