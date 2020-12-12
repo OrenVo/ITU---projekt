@@ -53,7 +53,7 @@ def start_timer():
     t = threading.Thread(target=timer)
     threads.append((t, current_user, timer))
     t.daemon = True
-    t.run()
+    t.start()
     eprint('Timer is running')  # TODO debuging
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
