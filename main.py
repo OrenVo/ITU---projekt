@@ -16,6 +16,8 @@ app.config["SECRET_KEY"] = "c7d6ee3e38c6ce4c50aedeedcf622b9f"
 app.app_context().push()
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = "web"
+login_manager.login_message = "You will need to log in to gain access to this page."
 users = list_users()
 threads = list()
 
@@ -245,7 +247,7 @@ def permissons_edit(username, level):
 def load_user(user_id):
     global users
     for user in users:
-        if user.id() == user_id:
+        if user.id == user_id:
             return user
 
 
