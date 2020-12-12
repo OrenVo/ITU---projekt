@@ -86,15 +86,16 @@ def check_password(user, password):
     lines = list()
     with open('/etc/shadow', 'rt') as f:
         lines = f.readlines()
-    user_p_line = [x for x in lines if x[:len(user)] == user]   # Get line from user
+    user_p_line = [x for x in lines if x.split(':')[0] == user]   # Get line from user
     if user_p_line:  # user found
         pass_part = user_p_line[0].split(':')[1]
-        pass_part = [x for x in pass_part.split('$') if x != '']
-        p_hash = pass_part[2] # TODO fails on non hashed password
-        salt = pass_part[1]
-        alg_id = pass_part[0]
-        print(alg_id, salt, p_hash, sep=' ')
-        print(crypt.crypt(password, f'${alg_id}${salt}'))
+        pass_part_splited = [x for x in pass_part.split('$') if x != '']
+        try:
+            p_hash = pass_part_splited[2]
+            salt = pass_part_splited[1]
+            alg_id = pass_part_splited[0]
+        except IndexError:
+            return pass_part == password
         return crypt.crypt(password, f'${alg_id}${salt}') == user_p_line[0].split(':')[1]
     else:   # user not found
         return False

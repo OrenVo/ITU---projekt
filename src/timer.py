@@ -60,7 +60,7 @@ class Timer:
                 self.do_action()
 
     def do_action(self):
-        assert self.time_left != 0
+        assert self.time_left == 0
         action = Actions.get(self.action)
         assert action is not None
         if self.path:  # TODO maybe check if exist

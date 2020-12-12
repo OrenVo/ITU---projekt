@@ -4,7 +4,7 @@ import json
 from datetime import timedelta
 from flask import flash, Flask, jsonify, redirect, render_template, request, Response, send_file, send_from_directory, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user, LoginManager, UserMixin
-from src.shared import User, list_users, list_processes, check_password, check_permissions, timers, monitors, get_timer_monitor
+from src.shared import User, list_users, list_processes, check_password, check_permissions, timers, monitors, get_timer_monitor, eprint
 from src.timer import Timer, Actions
 from src.resource_monitor import ResourceChecker, Monitor
 import threading
@@ -31,24 +31,32 @@ def index():
 @login_required
 def start_timer():
     if check_permissions(current_user.name, 1):
+        eprint('User doesn\'t have permissions to start timer') # TODO debuging
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
     timer_data = json.loads(request.get_json(force=True))
     time_sec = timer_data['time']
     action = Actions[timer_data['action']]
     path = timer_data['script']
+    eprint('start_timer: JSON ok') # TODO debuging
     timer = get_timer_monitor(timers, current_user.name)
-    if timer.is_running():
+    if timer.is_running:
+        eprint('Timer is already running')
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     if timer is None:
+        eprint('No timer found') # TODO debuging
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     timer.set_timer(time_sec)
-    timer.set_action(Actions[action])
+    timer.set_action(action)
     timer.set_script(path)
+    eprint('Timer is set')  # TODO debuging
     t = threading.Thread(target=timer)
     threads.append((t, current_user, timer))
     t.daemon = True
     t.run()
+    eprint('Timer is running')  # TODO debuging
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
 
 
 @app.route("/api/timer/stop")
@@ -76,7 +84,7 @@ def stat_timer():
 
 @app.route("/api/monitor/start", methods=["POST"])
 @login_required
-def start_monitor():
+def start_monitor():  # list of monitors in json start every
     if check_permissions(current_user.name, 1):
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
