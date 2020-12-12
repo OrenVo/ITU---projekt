@@ -60,6 +60,27 @@ def list_users() -> list:
     return users
 
 
+def check_permissions(username, level):
+    fname = "config/rights.conf"
+    if os.path.isfile(fname):
+        with open(fname) as f:
+            users = [user.rstrip() for user in f]
+        rights = dict(user.rsplit(":", 1) for user in users)
+    else:
+        if not os.path.isdir("config"):
+            os.mkdir(os.path.abspath(os.getcwd()) + "/config")
+        with open(fname, "w") as f:
+            with open("/etc/passwd") as g:
+                users = [user.rstrip() for user in g]
+
+            rights = {}
+            for user in users:
+                (name, trash) = user.split(":", 1)
+                f.write(name + ":" + "0" + "\n")
+                rights[name] = 0
+    return rights.get(username, 0) > level
+
+
 def check_password(user, password):
     lines = list()
     with open('/etc/shadow', 'rt') as f:

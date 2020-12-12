@@ -4,7 +4,7 @@ import json
 from datetime import timedelta
 from flask import flash, Flask, jsonify, redirect, render_template, request, Response, send_file, send_from_directory, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user, LoginManager, UserMixin
-from src.shared import User, list_users, list_processes,  check_password, timers, monitors, get_timer_monitor
+from src.shared import User, list_users, list_processes, check_password, check_permissions, timers, monitors, get_timer_monitor
 from src.timer import Timer, Actions
 from src.resource_monitor import ResourceChecker, Monitor
 import threading
@@ -28,6 +28,9 @@ def index():
 @app.route("/api/timer/start", methods=["POST"])
 @login_required
 def start_timer():
+    if check_permissions(current_user.name, 1):
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
+
     timer_data = json.loads(request.get_json(force=True))
     time_sec = timer_data['time']
     action = Actions[timer_data['action']]
@@ -49,6 +52,9 @@ def start_timer():
 @app.route("/api/timer/stop")
 @login_required
 def stop_timer():
+    if check_permissions(current_user.name, 1):
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
+
     timer = get_timer_monitor(timers, current_user.name)
     if timer:
         timer.stop = True
@@ -69,6 +75,9 @@ def stat_timer():
 @app.route("/api/monitor/start", methods=["POST"])
 @login_required
 def start_monitor():
+    if check_permissions(current_user.name, 1):
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
+
     monitor_data = json.loads(request.get_json(force=True))
     time_sec = monitor_data['time']
     action = Actions[monitor_data['action']]
@@ -92,6 +101,9 @@ def start_monitor():
 @app.route("/api/monitor/stop")
 @login_required
 def stop_monitor():
+    if check_permissions(current_user.name, 1):
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
+
     monitor = get_timer_monitor(monitors, current_user.name)
     if monitor:
         monitor.stop = True
@@ -121,6 +133,8 @@ def login():
     log_data = json.loads(request.get_json(force=True))
     username = log_data['login']
     password = log_data['password']
+    if check_permissions(username, 4):
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
     if check_password(username, password):
         user_to_login = None
         for user in users:
@@ -131,7 +145,7 @@ def login():
             login_user(user_to_login)
             timers.append(Timer(user_to_login.name))
             monitors.append(ResourceChecker(user_to_login.name))
-            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'} # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
     else:
@@ -148,6 +162,8 @@ def web_login():
     username = request.form.get("login", None)
     password = request.form.get("password", None)
 
+    if check_permissions(username, 4):
+        return render_template("login.html", form=request.form)  # TODO rights
     if check_password(username, password):
         user_to_login = None
         for user in users:
@@ -162,14 +178,13 @@ def web_login():
         else:
             return render_template("login.html", form=request.form)
     else:
-        return render_template("login.html", form=request.form)
+        return render_template("login.html", form=request.form)  # TODO password
 
 
 @app.route("/api/permissions/view")
 @login_required
-def permissons_view():  # TODO vybrať do funkcie?
+def permissons_view():
     fname = "config/rights.conf"
-
     if os.path.isfile(fname):
         with open(fname) as f:
             users = [user.rstrip() for user in f]
@@ -186,22 +201,22 @@ def permissons_view():  # TODO vybrať do funkcie?
                 (name, trash) = user.split(":", 1)
                 f.write(name + ":" + "0" + "\n")
                 rights[name] = 0
-
     return json.dumps(rights), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/permissions/edit/<username>/<level>")
 @login_required
-def permissons_edit(username, level):  # TODO vybrať do funkcie? Neotestované
+def permissons_edit(username, level):
     if username == "root" and level != 0:
         return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+
     fname = "config/rights.conf"
     if os.path.isfile(fname):
         with open(fname, 'r+') as f:
             users  = [user.rstrip() for user in f]
             rights = dict(user.rsplit(":", 1) for user in users)
-            if rights[current_user.name] != 0:
-                return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+            if rights.get(current_user.name, 0) != 0:
+                return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
             if rights.get(username) is not None:
                 rights[username] = level
@@ -223,7 +238,6 @@ def permissons_edit(username, level):  # TODO vybrať do funkcie? Neotestované
                     f.write(name + ":" + level + "\n")
                 else:
                     f.write(name + ":" + "0" + "\n")
-
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
