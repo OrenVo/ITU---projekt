@@ -134,12 +134,14 @@ def login():
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'} # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+    else:
+        return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
 
 
 @app.route("/web/login", methods=["GET", "POST"])
 def web_login():
     if current_user.is_authenticated:
-        pass  # TODO neviem co ma urobit
+        return render_template("index.html")
     if request.method == "GET":
         return render_template("login.html", form=request.form)
 
@@ -156,13 +158,13 @@ def web_login():
             login_user(user_to_login)
             timers.append(Timer(user_to_login.name))
             monitors.append(ResourceChecker(user_to_login.name))
-            return render_template("home.html", form=request.form)
+            return render_template("index.html")
         else:
             return render_template("login.html", form=request.form)
     else:
         return render_template("login.html", form=request.form)
 
-    
+
 @app.route("/api/permissions/view")
 @login_required
 def permissons_view():  # TODO vybrať do funkcie?
