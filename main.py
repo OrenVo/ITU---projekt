@@ -24,6 +24,8 @@ threads = list()
 
 @app.route("/")
 def index():
+    if current_user.is_authenticated:
+        return render_template('index.html')
     return render_template('login.html')
 
 
@@ -106,6 +108,7 @@ def start_monitor():  # list of monitors in json start every
     threads.append((t, current_user, monitor))
     t.daemon = True
     t.run()
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/monitor/stop")
