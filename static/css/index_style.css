@@ -46,8 +46,13 @@ button:hover {
     background-color: #0b6a78;
 }
 
+input[type="text"]{
+    width: 100px;
+}
+
 input[type="number"] {
     height: 40px;
+    width: 150px;
     padding: 0px 20px; 
     border: none;
     border-radius: 3px;
