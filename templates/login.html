@@ -28,7 +28,7 @@
 
     <!-- LOGIN -->
     <div class="login_header">
-          <form action="php" name="loginForm" method="POST" autocomplete="on">
+          <form action="{{ url_for('web_login') }}" name="loginForm" method="POST" autocomplete="on">
               <div class="login_form" id="lf">
                 <label for="login">Name</label><br><br>
                 <input type="text" name="login" id="login" autocomplete="name" placeholder="Enter name..." required><br><br>

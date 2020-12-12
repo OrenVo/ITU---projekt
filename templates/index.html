@@ -62,7 +62,7 @@
                     </div>
                     <!-- Launch button -->
                     <div class="quick_start_row">
-                        <a onclick="formToJson()">
+                        <a onclick="startFormToJson()">
                             <div id="on-off"></div>
                         </a>
                         <!--<button type="submit" onclick="formToJson()">Launch</button>-->
@@ -220,9 +220,10 @@
     }
 
     /* Parsing start form to JSON */
-    function formToJson() 
+    function startFormToJson() 
     {
-        var obj = {type:"", time:"", action:""}; // JS object
+        var obj = {time:"", action:"", script:""}; // JS object
+        obj.script = null; // TODO 
 
         var type1 = document.getElementById("timer1");  // Input for type1
         var type2 = document.getElementById("timer2");  // Input for type2
@@ -231,18 +232,10 @@
 
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
-        /* Type */
+        /* Type is not set */
         if(type1.checked === false && type2.checked === false)
-        { // Type is not set
+        { 
             return alert("Choose type!");
-        }
-        else if(type1.checked === true)
-        { // Type 1 is set
-            obj.type = "type1";
-        }
-        else 
-        { // Type 2 is set
-            obj.type = "type2";
         }
 
         /* Time */
@@ -265,6 +258,12 @@
 
         /* Sending data to server */
         sendData(jsonData);
+    }
+
+    /* SETTINGS FORM TO JSON */
+    function settingsFormToJson()
+    {
+        var obj = {};
     }
 </script>
 
@@ -309,9 +308,9 @@
         // ADVANCED SETTINGS 
         const settingsform = document.getElementById("settingsForm");
         startform.addEventListener( "submit", function ( event ) {
-          event.preventDefault();
+            event.preventDefault();
         
-          sendData();
+            sendData();
         } );
     } );
 </script>
