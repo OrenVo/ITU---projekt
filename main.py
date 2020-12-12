@@ -34,7 +34,7 @@ def start_timer():
         eprint('User doesn\'t have permissions to start timer') # TODO debuging
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
-    timer_data = json.loads(request.get_json(force=True))
+    timer_data = request.get_json(force=True)
     time_sec = timer_data['time']
     action = Actions[timer_data['action']]
     path = timer_data['script']
@@ -88,7 +88,7 @@ def start_monitor():  # list of monitors in json start every
     if check_permissions(current_user.name, 1):
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
-    monitor_data = json.loads(request.get_json(force=True))
+    monitor_data = request.get_json(force=True)
     time_sec = monitor_data['time']
     action = Actions[monitor_data['action']]
     resource = monitor_data['resource']
@@ -147,7 +147,7 @@ def web_logout():
 
 @app.route("/api/login", methods=["POST"])
 def login():
-    log_data = json.loads(request.get_json(force=True))
+    log_data = request.get_json(force=True)
     username = log_data['login']
     password = log_data['password']
     if check_permissions(username, 4):
