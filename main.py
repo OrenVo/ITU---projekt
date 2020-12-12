@@ -130,6 +130,13 @@ def logout():
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
+@app.route("/web/logout/")
+@login_required
+def web_logout():
+    logout_user()
+    return return render_template("login.html", form=request.form)
+
+
 @app.route("/api/login", methods=["POST"])
 def login():
     log_data = json.loads(request.get_json(force=True))
