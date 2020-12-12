@@ -79,7 +79,7 @@ def check_permissions(username, level):
                 (name, trash) = user.split(":", 1)
                 f.write(name + ":" + "0" + "\n")
                 rights[name] = 0
-    return rights.get(username, 0) > level
+    return int(rights.get(username, 0)) > level
 
 
 def check_password(user, password):
