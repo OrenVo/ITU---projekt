@@ -97,7 +97,7 @@ def start_monitor():  # list of monitors in json start every
     value = monitor_data.get('value')
     path = monitor_data['script']
     monitor = get_timer_monitor(monitors, current_user.name)
-    if monitor.is_running():
+    if monitor.is_running:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     if monitor is None:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
