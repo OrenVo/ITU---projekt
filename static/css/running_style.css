@@ -102,6 +102,38 @@ header {
     background-color: rgba(256,256,256,0.9);
 }
 
+.run_row {
+    height: 100px;
+    width: 100%;
+}
+
+#countdown {
+    font-weight: bold;
+}
+
+/* OFF Buton */
+#off {
+    height: 60px;
+    width: 60px;
+
+    display: table;
+    margin: 0 auto;
+    cursor: pointer;
+
+    background-image: url(../pictures/off1.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+#off:hover {
+    display: block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background-image: url(../pictures/off2.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
 /* The Modal Windows */
 /* Modal window for Members */
 /* The Modal (background) */
