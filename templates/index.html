@@ -181,7 +181,7 @@ function stopStart()
                     document.getElementById("quick_start").style.display = "block";
                     document.getElementById("advanced_settings").style.display = "block";
                   }
-                  else(this.status == 400)
+                  else
                   {
                       alert(this.status);
                   }                
@@ -190,7 +190,7 @@ function stopStart()
 
             request.open("GET", "{{ url_for('stop_timer') }}", true); // Inicializing request
            
-            alert("Sending stop request to server.");
+            //alert("Sending stop request to server.");
             request.send(); // Sending data
         } 
         catch (e)
@@ -215,7 +215,7 @@ function stopSettings()
                     document.getElementById("quick_start").style.display = "block";
                     document.getElementById("advanced_settings").style.display = "block";
                   }
-                  else(this.status == 400)
+                  else
                   {
                       alert(this.status);
                   }                
@@ -242,7 +242,7 @@ function stopSettings()
     /* Displays running app */
     function startApp()
     {
-        alert("start app");
+        //alert("start app");
         document.getElementById("run_proc").style.display = "block";
         document.getElementById("quick_start").style.display = "none";
         document.getElementById("advanced_settings").style.display = "none";
@@ -261,14 +261,14 @@ function stopSettings()
               {
                     if(this.status == 200)
                     {
-                    alert("Returning 200");
+                    //alert("Returning 200");
                     startApp();
                     return "200";    
                     }
 
                     else(this.status == 400)
                     {
-                        alert("Returnin 400 - Application already running");
+                        alert("Returning 400 - Application already running");
                         var confirmation = confirm("Would you like to stop the timer?");
                         if(confirmation == true)
                         {
@@ -285,7 +285,7 @@ function stopSettings()
             request.open("POST", server, true); // Inicializing request
             request.setRequestHeader("Content-Type", "application/json;"); // Setting header maybe /json
            
-            alert("Sending data to server.");
+            //alert("Sending data to server.");
             request.send(data); // Sending data
         } 
         catch (e)
@@ -522,17 +522,17 @@ function stopSettings()
             /* Countdown time */
             var x = setInterval(function(){
             
-              var distance = countdown_time - time_passed;
+                var distance = countdown_time - time_passed;
             
-              document.getElementById("countdown").innerHTML = distance;
+                document.getElementById("countdown").innerHTML = distance;
             
-              time_passed = time_passed + 1;
+                time_passed = time_passed + 1;
             
-              if(distance < 0)
-              {
-                clearInterval(x);
-                document.getElementById("countdown").innerHTML = "Expired";
-              }
+                if(distance < 0)
+                {
+                    clearInterval(x);
+                    document.getElementById("countdown").innerHTML = "Expired";
+                }
             }, 1000); 
         }  
 
@@ -548,22 +548,21 @@ function stopSettings()
                   {
                         if(this.status == 200)
                         {
-                            alert("Recieved time left");                    
-                            alert(this.responseText);   
+                            //alert("Recieved time left");                    
+                            //alert(this.responseText);   
                             var obj = JSON.parse(this.responseText);
                             countdownTimer(obj.time_left);
                         }
                         else
                         {
                             alert("Error recieving time left.");
-                            alert(this.responseText);
                         }                
                   }
                 };
 
                 request.open("GET", "{{ url_for('stat_timer') }}", false); // Inicializing request
             
-                alert("Sending time request to the server.");
+                //alert("Sending time request to the server.");
                 request.send(); // Sending data
             } 
             catch (e)
