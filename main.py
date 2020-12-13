@@ -207,7 +207,7 @@ def login():
     log_data = request.get_json(force=True)
     username = log_data['login']
     password = log_data['password']
-    if check_permissions(username, 4):
+    if check_permissions(username, 3):
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
     if check_password(username, password):
         user_to_login = None
@@ -237,7 +237,7 @@ def web_login():
     username = request.form.get("login", None)
     password = request.form.get("password", None)
 
-    if check_permissions(username, 4):
+    if check_permissions(username, 3):
         return render_template("login.html", form=request.form)  # TODO rights
     if check_password(username, password):
         user_to_login = None
@@ -266,7 +266,7 @@ def roman_login():
     username = request.form.get("login", None)
     password = request.form.get("password", None)
 
-    if check_permissions(username, 4):
+    if check_permissions(username, 3):
         return render_template("rauthentificate.html", form=request.form)  # TODO rights
     if check_password(username, password):
         user_to_login = None
