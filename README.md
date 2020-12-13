@@ -6,7 +6,7 @@
 ### Súbory
 
 #### (1.) Inštalačný súbor
-install.sh
+install.sh 
 
 #### (2.) Licencia
 LICENSE
@@ -18,50 +18,50 @@ main.py
 README.md
 
 #### (5.) Konfiguračná zložka
-conf
+conf  <br />
     &nbsp;&nbsp;&nbsp;- rights.conf
 
 #### (6.) Konfiguračná zložka
-config
+config  <br />
     &nbsp;&nbsp;&nbsp;- rights.conf
 
 #### (7.) Zdrojové súbory beckend serveru
-src
-    &nbsp;&nbsp;&nbsp;- monitor_status.sh
-    &nbsp;&nbsp;&nbsp;- requierements.txt
-    &nbsp;&nbsp;&nbsp;- resourse_monitor.py
-    &nbsp;&nbsp;&nbsp;- shared.py
-    &nbsp;&nbsp;&nbsp;- timer.py
-    &nbsp;&nbsp;&nbsp;-> __pychace_
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- resource_monitor.cpython-38
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared.cpython-38.pyc
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- timer.cpython-38.pyc
+src  <br />
+    &nbsp;&nbsp;&nbsp;- monitor_status.sh  <br />
+    &nbsp;&nbsp;&nbsp;- requierements.txt  <br />
+    &nbsp;&nbsp;&nbsp;- resourse_monitor.py  <br />
+    &nbsp;&nbsp;&nbsp;- shared.py  <br />
+    &nbsp;&nbsp;&nbsp;- timer.py  <br /> 
+    &nbsp;&nbsp;&nbsp;-> __pychace_  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- resource_monitor.cpython-38  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared.cpython-38.pyc  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- timer.cpython-38.pyc  <br />
     
 
 #### (8.) Statické súbory pre Web aplikáciu
-static
-    &nbsp;&nbsp;&nbsp;-> css
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- index_style.css
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- login_style.css
-    &nbsp;&nbsp;&nbsp;- pictures
+static  <br />
+    &nbsp;&nbsp;&nbsp;-> css  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- index_style.css  <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- login_style.css  <br />
+    &nbsp;&nbsp;&nbsp;- pictures  <br />
 
 #### (9.) Html súbory pre Web aplikáciu
-templates
-    &nbsp;&nbsp;&nbsp;- index.html
-    &nbsp;&nbsp;&nbsp;- login.html
+templates  <br />
+    &nbsp;&nbsp;&nbsp;- index.html  <br />
+    &nbsp;&nbsp;&nbsp;- login.html  <br />
 
 ### Spustenie
 
 #### (1.) Požiadavky
 Pre úspšné spustenie je nutné mať nainštalované všetky požiadavky v súbore *requierements.txt*.
 
-Inštalácia požiadavkov pomocou príkazu:
+Inštalácia požiadavkov pomocou príkazu:  <br />
 *pip3 install -r requierements.txt*
 
 #### (2.) Spustenie servera
-Spustenie servera:
-*python3 main.py*
-*Pozn. je nutné mať práva superužívateľa.*
+Spustenie servera:  <br />
+*python3 main.py*  <br />
+*Pozn. je nutné mať práva superužívateľa.*  
 
 ### Desktopová aplikácia
 TODO
@@ -70,11 +70,11 @@ TODO
 Použitie webovej aplikácie.
 
 ##### (1.) Vzdialený server
-Je nutné sa pripojiť na vzdialený server pomocou príkazu:
+Je nutné sa pripojiť na vzdialený server pomocou príkazu:  <br />
 *ssh name@servername*
 
 ##### (2.) Spustenie
-Spustenie cez webový prehliadač na adrese:
+Spustenie cez webový prehliadač na adrese:  <br />
 *localhost:5000* alebo *127.0.0.1:5000*
 
 ##### (3.) Prihlásenie a spustenie aplikácie
