@@ -36,8 +36,7 @@ class ResourceChecker:
         }
 
     def do_action(self):
-        action = Actions.get(self.action)
-        assert action is not None
+        action = self.action
         if self.path:  # TODO maybe check if exist
             os.system(f"/bin/su -s /bin/bash -c '{self.path}' {self.user}")
         if action:
@@ -103,6 +102,7 @@ class ResourceChecker:
         while self.stop is False or not shutdown_event.is_set():
             if psutil.cpu_percent(interval=self.monitor_time) <= self.monitor_value:
                 self.do_action()
+                return
             time.sleep(1)
 
     def monitor_net(self):
@@ -130,6 +130,7 @@ class ResourceChecker:
                 if avg < self.monitor_value:
                     event.set()
                     self.do_action()
+                    return
 
     def monitor_ram(self):
         
@@ -142,6 +143,7 @@ class ResourceChecker:
                 avg = sum(l_usage) / len(l_usage)
                 if avg < self.monitor_value:
                     self.do_action()
+                    return
             time.sleep(1)
 
     def monitor_audio(self):
@@ -155,6 +157,7 @@ class ResourceChecker:
                 count = 0
             if count == self.monitor_time:
                 self.do_action()
+                return
             time.sleep(1)
 
     def monitor_proc(self):
@@ -165,8 +168,10 @@ class ResourceChecker:
                 stat = process.status()
                 if stat is psutil.STATUS_DEAD:
                     self.do_action()
+                    return
             else:
                 self.do_action()
+                return
             time.sleep(5)
 
     def monitor_disp(self):
@@ -197,6 +202,7 @@ class ResourceChecker:
                         count = 0
             if count * 2 >= self.monitor_time:
                 self.do_action()
+                return
             time.sleep(2)
 
 

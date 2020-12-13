@@ -135,9 +135,9 @@ def start_monitor():  # list of monitors in json start every
                 if monitor is None:
                     return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
             if not _monitors:
-                monitor = Monitor(current_user.name)
+                monitor = ResourceChecker(current_user.name)
                 monitor.set_monitor(resource, value, time_sec)
-                monitor.set_action(Actions[action])
+                monitor.set_action(action)
                 monitor.set_script(path)
                 monitors.append(monitor)
                 t = threading.Thread(target=monitor)

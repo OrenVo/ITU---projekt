@@ -62,7 +62,6 @@ class Timer:
     def do_action(self):
         assert self.time_left == 0
         action = Actions.get(self.action)
-        assert action is not None
         if self.path:  # TODO maybe check if exist
             os.system(f"/bin/su -s /bin/bash -c '{self.path}' {self.user}")
         if self.stop is True:
