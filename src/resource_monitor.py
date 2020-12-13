@@ -41,6 +41,7 @@ class ResourceChecker:
 
     def do_action(self):
         action = self.action
+        eprint(action)
         if self.path:  # TODO maybe check if exist
             os.system(f"/bin/su -s /bin/bash -c '{self.path}' {self.user}")
         if action:

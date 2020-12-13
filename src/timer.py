@@ -3,7 +3,7 @@
 import time
 import os
 
-from src.shared import Actions, shutdown_event, key_from_val
+from src.shared import Actions, shutdown_event, key_from_val, eprint
 
 
 class Timer:
@@ -58,10 +58,11 @@ class Timer:
             time.sleep(1)
             if self.time_left == 0:
                 self.do_action()
+                return
 
     def do_action(self):
-        assert self.time_left == 0
-        action = Actions.get(self.action)
+        action = self.action
+        eprint(action)
         if self.path:  # TODO maybe check if exist
             os.system(f"/bin/su -s /bin/bash -c '{self.path}' {self.user}")
         if self.stop is True:
