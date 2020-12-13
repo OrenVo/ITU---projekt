@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
+    <!-- HEAD -->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../static/css/index_style.css" type="text/css"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}" type="text/css"/>
         <title>Index</title>
     </head>
 
@@ -17,7 +18,7 @@
             <div class="header_settings">
                 <div id="myBtnInfo"></div>
                 <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
-                <a href="#">
+                <a href="{{ url_for('web_logout') }}">
                     <button>Logout</button>
                 </a>
             </div>            
@@ -31,7 +32,7 @@
             <div class="quick_start_container" id="qsc">
                 <!-- Header -->
                 <div class="quick_start_row h1">
-                    <h1>Quick Start</h1>
+                    <h1>Start</h1>
                 </div>
                 <!-- FORM -->
                 <form id="startForm">            
@@ -55,14 +56,16 @@
                         <label for="action"><b>Select action</b></label><br>
 
                         <select name="action" id="action" required>
-                            <option value="shutdown">Shut down</option>
-                            <option value="lock">Lock</option>
-                            <option value="restart">Restart</option>
+                            <option value="Poweroff">Power off</option>
+                            <option value="Reboot">Reboot</option>
+                            <option value="Hibernate">Hibernate</option>
+                            <option value="Suspend">Suspend</option>
+                            <option value="Script">Script</option>
                         </select>
                     </div>
                     <!-- Launch button -->
                     <div class="quick_start_row">
-                        <a onclick="startFormToJson()">
+                        <a onclick="startFormToJson(), settingsFormToJson()">
                             <div id="on-off"></div>
                         </a>
                         <!--<button type="submit" onclick="formToJson()">Launch</button>-->
@@ -85,43 +88,44 @@
                         When CPU load drops below: 
                         <input type="number" id="cpu_num" name="cpu_num" placeholder="Percentage">
                         % for
-                        <input type="time" id="cpu_time" name="cpu_time">
+                        <input type="text" id="cpu_time" name="cpu_time" placeholder="hh:mm:ss">
                     </div>
                     <!-- RAM -->
                     <div class="advanced_settings_row">
                         When RAM load drops below: 
                         <input type="number" placeholder="Percentage">
                         % for
-                        <input type="time" id="ram_time" name="ram_time">
+                        <input type="text" id="ram_time" name="ram_time" placeholder="hh:mm:ss">
                     </div>
                     <!-- Network -->
                     <div class="advanced_settings_row">
                         When network transfer drops below:
                         <input type="number" name="net_num" id="net_num" placeholder="kB">
                         kb/s for 
-                        <input type="time" name="net_time" id="net_time">
+                        <input type="text" name="net_time" id="net_time" placeholder="hh:mm:ss">
                     </div>
-                    <!-- Proccess -->
+                    <!-- Proccess 
                     <div class="advanced_settings_row">
-                        <label for="proccess"><b>Choose Proccess</b></label><br>
+                        <label for="proccess"><b>Choose Proccess</b></label>
                         <select name="proccess" id="proccess">
                             <option value="proccess1">Proccess1</option>
                             <option value="proccess2">Proccess2</option>
                         </select>
-                    </div>
+                    </div>-->
                     <!-- Audio -->
                     <div class="advanced_settings_row">
                         When audio is not playing for 
-                        <input type="time" name="audio_time" id="audio_time">
+                        <input type="text" name="audio_time" id="audio_time" placeholder="hh:mm:ss">
                     </div>
                     <!-- Screen saver -->
                     <div class="advanced_settings_row">
                         When display is in screen saver mode for 
-                        <input type="time" name="screen_time" id="screen_time">
+                        <input type="text" name="screen_time" id="screen_time" placeholder="hh:mm:ss">
                     </div>
-                    <!-- Sumbit -->
+                    <!-- Script -->
                     <div class="advanced_settings_row">
-                        <button type="submit">Submit</button>
+                        Enter script
+                        <input type="text" name="script" id="script" placeholder="">
                     </div>
                 </form>
             </div>
@@ -137,8 +141,12 @@
         </div>
     </body>
 
-<!-- FORM JSON START -->
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- FORM TO JSON -->
 <script type="text/javascript">
+
     /* Create HTTP request */
     function createXmlHttpRequestObject() {
       var xmlhttp;
@@ -158,22 +166,84 @@
       }
     }
 
-    /* Sending data to server */
-    function sendData(data)
+ /* Getting response from server */
+ function getData(server)
     {
         try
         {
             var request = new createXmlHttpRequestObject(); // Creating request
-            request.open("POST", "#", true); // Inicializing request
-            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;"); // Setting header maybe /json
+            request.open("GET", server, true); // Inicializing request
+
+            alert("Recieving data from server.");
+
+            request.onreadystatechange = function() 
+            {
+                if ((request.readyState == 4) && (request.status == 200)) // Response is ready
+                {
+                    alert("Ready data");
+                    alert(request.responseText);
+                    var response = JSON.parse(request.responseText);
+                    alert(response);
+                }
+            }
+        }
+        catch (e)
+        {
+            alert(e.toString());
+        }
+    }
+
+    /* Sending data to server */
+    function sendData(data, server)
+    {
+        /*$(document).ready(function(){
+            const Url = server;
+            $('#on-off').click(function(){
+                $.ajax({
+                    url: Url,
+                    type: "POST",
+                    success: function(result){
+                        alert("Success");
+                        console.log(result)
+                    },
+                    error: function(error){
+                        console.log('Error ${error}')
+                    }
+                })
+            })
+        })*/
+        try
+        {
+            var request = new createXmlHttpRequestObject(); // Creating request
+            request.open("POST", "{{ url_for('start_timer') }}", true); // Inicializing request
+            request.setRequestHeader("Content-Type", "application/json;"); // Setting header maybe /json
+           
             alert("Sending data to server.");
             request.send(data); // Sending data
+
+            request.onload = function() {
+                alert(request.responseText);
+            };
+/*
+           request.onreadystatechange = function() 
+            {
+                alert("Recieving data");
+                if ((request.readyState == 4) && (request.status == 200)) // Response is ready
+                {
+                    alert("Ready data");
+                    alert(request.responseText);
+                    var response = JSON.parse(request.responseText);
+                    alert(response);
+                }
+            }*/
         } 
         catch (e)
         {
             alert(e.toString());
         }
     }
+
+   
 
     /* Controling and calculating time input */
     function checkTime(time, type1)
@@ -222,14 +292,10 @@
     /* Parsing start form to JSON */
     function startFormToJson() 
     {
-        var obj = {time:"", action:"", script:""}; // JS object
-        obj.script = null; // TODO 
-
+        var obj = {time:null, action:null, script:null}; // JS object
         var type1 = document.getElementById("timer1");  // Input for type1
         var type2 = document.getElementById("timer2");  // Input for type2
-
         var time = document.getElementById("time"); // Input for time
-
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
         /* Type is not set */
@@ -252,18 +318,137 @@
             obj.action = element.value;     
         }
 
+        /* Script */
+        if(document.getElementById("script").value !== "")
+        {
+            obj.script = document.getElementById("script").value;
+        }
+
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
         alert(jsonData);
 
         /* Sending data to server */
-        sendData(jsonData);
+        sendData(jsonData, "{{ url_for('start_timer') }}");
+
+        /* Recieving response from server */
+        //getData("{{ url_for('start_timer') }}");
     }
 
+    
     /* SETTINGS FORM TO JSON */
     function settingsFormToJson()
     {
-        var obj = {};
+        var obj = {time:null, action:null, resource:null, value:null, script:null};
+        var type = false;
+        var action_elems = document.querySelectorAll("#startForm select"); // Action element
+
+        if(document.getElementById("cpu_num").value !== "")
+        { // CPU
+            if(document.getElementById("cpu_time").value !== "")
+            {
+                obj.resource = "CPU";                
+                obj.value = document.getElementById("cpu_num").value;
+
+                /* Time */
+                var time_result = checkTime(document.getElementById("cpu_time").value, type);
+                if(time_result === "error")
+                {
+                   return alert("Enter a valid time! Format: hh:mm:ss ");           
+                }
+                obj.time = time_result; // Set time into object
+            }
+            else
+            {
+                return alert("Enter CPU time!");
+            }
+            alert("cpu end");
+        }
+        else if(document.getElementById("ram_num").value !== "")
+        { // RAM
+            if(document.getElementById("ram_time").value !== "")
+            {
+                obj.resource = "RAM";
+                obj.value = document.getElementById("ram_num").value;
+                /* Time */
+                var time_result = checkTime(document.getElementById("ram_time").value, type);
+                if(time_result === "error")
+                {
+                   return alert("Enter a valid time! Format: hh:mm:ss ");           
+                }
+                obj.time = time_result; // Set time into object
+            }
+            else
+            {
+                return alert("Enter RAM time!");
+            }
+            alert("ram end");
+        }
+        else if(document.getElementById("net_num").value !== "")
+        { // Network 
+            if(document.getElementById("net_time").value !== "")
+            {
+                obj.resource = "Network";
+                obj.value = document.getElementById("net_num").value;
+                /* Time */
+                var time_result = checkTime(document.getElementById("net_time").value, type);
+                if(time_result === "error")
+                {
+                   return alert("Enter a valid time! Format: hh:mm:ss ");           
+                }
+                obj.time = time_result; // Set time into object
+            }
+            else
+            {
+                return alert("Enter Network time!");
+            }
+        }
+        else if(document.getElementById("audio_time").value !== "")
+        { // Audio
+            obj.resource = "Audio";
+            /* Time */
+            var time_result = checkTime(document.getElementById("audio_time").value, type);
+            if(time_result === "error")
+            {
+               return alert("Enter a valid time! Format: hh:mm:ss ");           
+            }
+            obj.time = time_result; // Set time into object
+        }
+        else if(document.getElementById("screen_time").value !== "")
+        { // Screen
+            obj.resource = "Screen";
+            /* Time */
+            var time_result = checkTime(document.getElementById("screen_time").value, type);
+            if(time_result === "error")
+            {
+               return alert("Enter a valid time! Format: hh:mm:ss ");           
+            }
+            obj.time = time_result; // Set time into object
+        }
+        
+        if(document.getElementById("script").value !== "")
+        { // Script
+            obj.script = document.getElementById("script").value;
+        }
+
+        alert("scrpt end");
+
+        /* Action */
+        var action_elems = document.querySelectorAll("#startForm select"); // Action element
+        for (var i = 0, element; element = action_elems[i++];) 
+        {
+            obj.action = element.value;     
+        }
+
+        /* Create JSON string from an object */
+        var jsonData = JSON.stringify(obj);
+        alert(jsonData);
+
+        /* Sending data to server */
+        //sendData(jsonData, "{{ url_for('start_monitor') }}");
+
+        /* Recieving response from server */
+        //getData("{{ url_for('start_monitor') }}");
     }
 </script>
 
@@ -276,43 +461,6 @@
         document.getElementById("h").classList.toggle("dark-mode-h");
         document.getElementById("dm_btn").classList.toggle("bgc_1");
     }
-</script>
-
-<!-- FORM JSON SETTINGS -->
-<script type="text/javascript">
-    window.addEventListener( "load", function () {
-        function sendData() {
-            const XHR = new XMLHttpRequest();
-
-            // Bind the FormData object and the form element
-            const FD = new FormData( form );
-            
-            // Define what happens on successful data submission
-            XHR.addEventListener( "load", function(event) {
-              alert( event.target.responseText );
-            } );
-
-            // Define what happens in case of error
-            XHR.addEventListener( "error", function( event ) {
-              alert( 'Oops! Something went wrong.' );
-            } );
-
-            // Set up our request
-            XHR.open( "POST", "https://example.com/cors.php" );
-
-           
-            // The data sent is what the user provided in the form
-            XHR.send( FD );            
-        }
-
-        // ADVANCED SETTINGS 
-        const settingsform = document.getElementById("settingsForm");
-        startform.addEventListener( "submit", function ( event ) {
-            event.preventDefault();
-        
-            sendData();
-        } );
-    } );
 </script>
 
 <!-- MODAL WINDOW -->

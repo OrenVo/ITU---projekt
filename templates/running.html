@@ -4,7 +4,7 @@
 <!-- HEAD -->
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../static/css/running_style.css" type="text/css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/running_style.css') }}" type="text/css"/>
   <title>Running</title>
 </head>
 
@@ -19,7 +19,7 @@
         <div class="header_settings">
             <div id="myBtnInfo"></div>
             <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
-            <a href="#">
+            <a href="{{ url_for('web_logout') }}">
                 <button>Logout</button>
             </a>
         </div>            
