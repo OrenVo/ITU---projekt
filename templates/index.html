@@ -132,18 +132,21 @@
         </div>
 
         <!-- Running procccess -->
-        <div class="run_proc" id="rp">
-            <!-- Countdown -->
+        <div id="run_proc" id="rp">
+
+            <!-- Countdown title -->
             <div class="run_row">
                 <h1>Proccess will be executed in</h1><br>
             </div>
+
+            <!-- Countdown timer -->
             <div class="run_row" id="countdown">
                 
             </div>
             <!-- Off Button -->
             <div class="run_row">
-              <div id="off"></div>
-            </div>
+                <div id="off" onclick="stopApp()"></div>
+            </div>            
           </div>
     </div>
 
@@ -162,6 +165,50 @@
 <!-- FORM TO JSON -->
 <script type="text/javascript">
 
+    /* Sends a stop request */
+    function stopApp()
+    {
+
+        try
+        {
+            var request = new XMLHttpRequest(); // Creating request
+
+            request.onreadystatechange = function() {
+              if (this.readyState == 4)
+              {
+                  if(this.status == 200)
+                  {
+                    document.getElementById("run_proc").style.display = "none";
+                    document.getElementById("quick_start").style.display = "block";
+                    document.getElementById("advanced_settings").style.display = "block";
+                  }
+                  else(this.status == 400)
+                  {
+                      alert(this.status);
+                  }                
+              }
+            };
+
+            request.open("GET", "{{ url_for('stop_timer') }}", true); // Inicializing request
+           
+            alert("Sending stop request to server.");
+            request.send(); // Sending data
+        } 
+        catch (e)
+        {
+            alert(e.toString());
+        }
+    }
+
+    /* Displays running app */
+    function startApp()
+    {
+        alert("start app");
+        document.getElementById("run_proc").style.display = "block";
+        document.getElementById("quick_start").style.display = "none";
+        document.getElementById("advanced_settings").style.display = "none";
+    }
+
     /* Sending data to server */
     function sendData(data, server)
     {
@@ -174,13 +221,24 @@
               {
                   if(this.status == 200)
                   {
-                      document.getElementById("run_proc").style.display = "block";
-                      document.getElementById("quick_start").style.display = "none";
-                      document.getElementById("advanced_settings").style.display = "none";
+                    alert("Returning 200");
+                    startApp();
+                    return "200";  
+                      
                   }
-                alert("Recieving data from server");
-                alert(this.responseText);
-                return this.responseText;
+                  else(this.status == 400)
+                  {
+                      alert("Returnin 400 - Application already running");
+                      var confirmation = confirm("Would you like to stop the timer?");
+                      if(confirmation == true)
+                      {
+                        stopApp();
+                      }
+                      else
+                      {
+                          startApp();
+                      }
+                  }                
               }
             };
 
@@ -277,7 +335,6 @@
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
-        alert(jsonData);
 
         /* Sending data to server */
         var response = sendData(jsonData, "{{ url_for('start_timer') }}");
@@ -393,12 +450,10 @@
         //sendData(jsonData, "{{ url_for('start_monitor') }}");
     }
 
-
+    /* Calling functions to parse forms into JSON */
     function callFunctions()
     {
-        var start_rcode = JSON.parse(startFormToJson());
-
-        alert(start_rcode);
+        startFormToJson();
     }
 </script>
 
