@@ -17,13 +17,6 @@ main.py
 #### (4.) Readme
 README.md
 
-#### (5.) Konfiguračná zložka
-conf  <br />
-    &nbsp;&nbsp;&nbsp;- rights.conf
-
-#### (6.) Konfiguračná zložka
-config  <br />
-    &nbsp;&nbsp;&nbsp;- rights.conf
 
 #### (7.) Zdrojové súbory beckend serveru
 src  <br />
@@ -32,10 +25,6 @@ src  <br />
     &nbsp;&nbsp;&nbsp;- resourse_monitor.py  <br />
     &nbsp;&nbsp;&nbsp;- shared.py  <br />
     &nbsp;&nbsp;&nbsp;- timer.py  <br /> 
-    &nbsp;&nbsp;&nbsp;-> __pychace_  <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- resource_monitor.cpython-38  <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- shared.cpython-38.pyc  <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- timer.cpython-38.pyc  <br />
     
 
 #### (8.) Statické súbory pre Web aplikáciu
@@ -50,6 +39,11 @@ templates  <br />
     &nbsp;&nbsp;&nbsp;- index.html  <br />
     &nbsp;&nbsp;&nbsp;- login.html  <br />
 
+#### (10.) Zdrojové kódy desktopové aplikace
+templates  <br />
+    &nbsp;&nbsp;&nbsp;- client/main.py  <br />
+    &nbsp;&nbsp;&nbsp;- client/src/*  <br />
+
 ### Spustenie
 
 #### (1.) Požiadavky
@@ -60,22 +54,23 @@ Inštalácia požiadavkov pomocou príkazu:  <br />
 
 #### (2.) Spustenie servera
 Spustenie servera:  <br />
-*python3 main.py*  <br />
+*python3 main.py [ip_adresa_rozhraní:port]*  <br />
 *Pozn. je nutné mať práva superužívateľa.*  
-
+#### (3.) Instalace
+Spuštěním instalačního skriptu install.sh nainstaluje server do složky /root/bin/ShutDownToolServer. A server spustí na portu 60606 na všech rozhraní.
 ### Desktopová aplikácia
-TODO
+Desktopová aplikace se připojí k serveru na adrese 127.0.0.1 na port 60606. Zdrojové kódy jsou umístěné ve složkách client a client/src. Spuštění aplikace se provede příkazem python3 main.py. Přihlášení k serveru se provádí uživatelským jménem a heslem k účtu na Ubuntu. 
 
 ### Webová aplikácia
 Použitie webovej aplikácie.
 
 ##### (1.) Vzdialený server
 Je nutné sa pripojiť na vzdialený server pomocou príkazu:  <br />
-*ssh name@servername*
+*ssh -R 60606:localhost:60606 name@servername*
 
 ##### (2.) Spustenie
 Spustenie cez webový prehliadač na adrese:  <br />
-*localhost:5000* alebo *127.0.0.1:5000*
+*localhost:60606* alebo *127.0.0.1:60606*
 
 ##### (3.) Prihlásenie a spustenie aplikácie
 Po pripojení na vybraný server a spustení aplikácie v prehliadači sa musíte prihlásiť. Po prihlásení sa vám zobrazí stránka na ktorej môžete nastaviť ktoré akcie sa vykonajú a spustiť aplikáciu.
