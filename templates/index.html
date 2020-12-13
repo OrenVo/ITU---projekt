@@ -165,11 +165,10 @@
 <!-- FORM TO JSON -->
 <script type="text/javascript">
 
-    /* Sends a stop request */
-    function stopApp()
-    {
-
-        try
+/* Stop Timer */
+function stopStart()
+{
+    try
         {
             var request = new XMLHttpRequest(); // Creating request
 
@@ -198,6 +197,46 @@
         {
             alert(e.toString());
         }
+}
+
+/* Stop Monitor */
+function stopSettings()
+{
+    try
+        {
+            var request = new XMLHttpRequest(); // Creating request
+
+            request.onreadystatechange = function() {
+              if (this.readyState == 4)
+              {
+                  if(this.status == 200)
+                  {
+                    document.getElementById("run_proc").style.display = "none";
+                    document.getElementById("quick_start").style.display = "block";
+                    document.getElementById("advanced_settings").style.display = "block";
+                  }
+                  else(this.status == 400)
+                  {
+                      alert(this.status);
+                  }                
+              }
+            };
+
+            request.open("GET", "{{ url_for('stop_monitor') }}", true); // Inicializing request
+           
+            alert("Sending stop request to server.");
+            request.send(); // Sending data
+        } 
+        catch (e)
+        {
+            alert(e.toString());
+        }    
+}
+    /* Sends a stop request */
+    function stopApp()
+    {
+        stopStart();
+        //stopSettings();
     }
 
     /* Displays running app */
@@ -207,6 +246,7 @@
         document.getElementById("run_proc").style.display = "block";
         document.getElementById("quick_start").style.display = "none";
         document.getElementById("advanced_settings").style.display = "none";
+        getTimeLeft();
     }
 
     /* Sending data to server */
@@ -219,28 +259,28 @@
             request.onreadystatechange = function() {
               if (this.readyState == 4)
               {
-                  if(this.status == 200)
-                  {
+                    if(this.status == 200)
+                    {
                     alert("Returning 200");
                     startApp();
-                    return "200";  
-                      
-                  }
-                  else(this.status == 400)
-                  {
-                      alert("Returnin 400 - Application already running");
-                      var confirmation = confirm("Would you like to stop the timer?");
-                      if(confirmation == true)
-                      {
-                        stopApp();
-                      }
-                      else
-                      {
-                          startApp();
-                      }
-                  }                
-              }
-            };
+                    return "200";    
+                    }
+
+                    else(this.status == 400)
+                    {
+                        alert("Returnin 400 - Application already running");
+                        var confirmation = confirm("Would you like to stop the timer?");
+                        if(confirmation == true)
+                        {
+                            stopApp();
+                        }
+                        else
+                        {
+                            startApp();
+                        }
+                    }                
+                }
+        };
 
             request.open("POST", server, true); // Inicializing request
             request.setRequestHeader("Content-Type", "application/json;"); // Setting header maybe /json
@@ -337,7 +377,7 @@
         var jsonData = JSON.stringify(obj);
 
         /* Sending data to server */
-        var response = sendData(jsonData, "{{ url_for('start_timer') }}");
+        sendData(jsonData, "{{ url_for('start_timer') }}");
     }
 
     
@@ -454,6 +494,7 @@
     function callFunctions()
     {
         startFormToJson();
+        //settingsFormToJson();
     }
 </script>
 
@@ -469,25 +510,67 @@
     }
 </script>
 
+
 <!-- COUNTDOWN -->
 <script type="text/javascript">
-    var countdown_time = 1000;
-    var time_passed = 0;
-  
-    var x = setInterval(function(){
-  
-      var distance = countdown_time - time_passed;
-  
-      document.getElementById("countdown").innerHTML = distance;
-  
-      time_passed = time_passed + 1;
-  
-      if(distance < 0)
-      {
-        clearInterval(x);
-        document.getElementById("countdown").innerHTML = "Expired";
-      }
-    }, 1000);  
+ 
+
+        function countdownTimer(countdown_time)
+        {            
+            var time_passed = 0;
+    
+            /* Countdown time */
+            var x = setInterval(function(){
+            
+              var distance = countdown_time - time_passed;
+            
+              document.getElementById("countdown").innerHTML = distance;
+            
+              time_passed = time_passed + 1;
+            
+              if(distance < 0)
+              {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Expired";
+              }
+            }, 1000); 
+        }  
+
+        /* Send request which tells how much time is left */
+        function getTimeLeft()
+        {
+            try
+            {
+                var request = new XMLHttpRequest(); // Creating request
+
+                request.onreadystatechange = function() {
+                  if (this.readyState == 4)
+                  {
+                        if(this.status == 200)
+                        {
+                            alert("Recieved time left");                    
+                            alert(this.responseText);   
+                            var obj = JSON.parse(this.responseText);
+                            countdownTimer(obj.time_left);
+                        }
+                        else
+                        {
+                            alert("Error recieving time left.");
+                            alert(this.responseText);
+                        }                
+                  }
+                };
+
+                request.open("GET", "{{ url_for('stat_timer') }}", false); // Inicializing request
+            
+                alert("Sending time request to the server.");
+                request.send(); // Sending data
+            } 
+            catch (e)
+            {
+                alert(e.toString());
+            }           
+    }
 </script>
 
 <!-- MODAL WINDOW -->
