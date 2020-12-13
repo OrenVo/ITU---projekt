@@ -51,27 +51,7 @@
 
 </body>
 
-<!-- COUNTDOWN -->
-<script type="text/javascript">
-  var countdown_time = 1000;
-  var time_passed = 0;
 
-  var x = setInterval(function(){
-
-    var distance = countdown_time - time_passed;
-
-    document.getElementById("countdown").innerHTML = distance;
-
-    time_passed = time_passed + 1;
-
-    if(distance < 0)
-    {
-      clearInterval(x);
-      document.getElementById("countdown").innerHTML = "Expired";
-    }
-  }, 1000);
-
-</script>
 
 <!-- DARK MODE JS -->
 <script type="text/javascript">

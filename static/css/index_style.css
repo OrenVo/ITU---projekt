@@ -47,6 +47,7 @@ button:hover {
 }
 
 input[type="text"]{
+    height: 35px;
     width: 100px;
 }
 
@@ -59,7 +60,7 @@ input[type="number"] {
 }
 
 input[type="time"] {
-    height: 40px;
+    height: 35px;
     padding: 0 10px;
     border: none;
     border-radius: 3px;
@@ -215,6 +216,60 @@ header {
     height: 12%;
 
     padding-top: 2%;
+}
+
+/* Process div */
+.run_proc {
+    height: auto;
+    width: 80%;
+
+    float: left;
+    margin-top: 50px;
+    margin-left: 10%;
+
+    text-align: center;
+    font-size: 20px;
+    border-radius: 3px;
+    background-color: rgba(256,256,256,0.9);
+
+    display: none;
+}
+
+.run_row {
+    height: 100px;
+    width: 100%;
+
+    padding: 20px;
+}
+
+#countdown {
+    font-weight: bold;
+    font-size: 2em;
+    background-color: #071A1E;
+    color: red;
+}
+
+/* OFF Buton */
+#off {
+    height: 60px;
+    width: 60px;
+
+    display: table;
+    margin: 0 auto;
+    cursor: pointer;
+
+    background-image: url(../pictures/off2.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+#off:hover {
+    display: block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background-image: url(../pictures/off1.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 /* The Modal Windows */

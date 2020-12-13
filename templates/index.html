@@ -66,11 +66,9 @@
                     </div>
                     <!-- Launch button -->
                     <div class="quick_start_row">
-                        <a onclick="startFormToJson(), settingsFormToJson()">
+                        <a onclick="callFunctions()">
                             <div id="on"></div>
                         </a>
-                        <span onclick="redirect()">Redirect</span>
-                        <!--<button type="submit" onclick="formToJson()">Launch</button>-->
                     </div>
                 </form>
             </div>
@@ -132,7 +130,22 @@
                 </form>
             </div>
         </div>
-        </div>
+
+        <!-- Running procccess -->
+        <div class="run_proc" id="rp">
+            <!-- Countdown -->
+            <div class="run_row">
+                <h1>Proccess will be executed in</h1><br>
+            </div>
+            <div class="run_row" id="countdown">
+                
+            </div>
+            <!-- Off Button -->
+            <div class="run_row">
+              <div id="off"></div>
+            </div>
+          </div>
+    </div>
 
         <!-- MODAL WINDOW INFO -->
         <div id="myModalInfo" class="modal">
@@ -143,44 +156,11 @@
         </div>
     </body>
 
-
-<script>
-    function redirect(){
-        window.location.replace("running.html");
-    }
-</script>
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- FORM TO JSON -->
 <script type="text/javascript">
-
- /* Getting response from server */
- function getData(server)
-    {
-        try
-        {
-            var request = new XMLHttpRequest(); // Creating request
-            request.open("GET", server, true); // Inicializing request
-
-            alert("Recieving data from server.");
-
-            request.onreadystatechange = function() 
-            {
-                if ((request.readyState == 4) && (request.status == 200)) // Response is ready
-                {
-                    alert("Ready data");
-                    alert(request.responseText);
-                    var response = JSON.parse(request.responseText);
-                    alert(response);
-                }
-            }
-        }
-        catch (e)
-        {
-            alert(e.toString());
-        }
-    }
 
     /* Sending data to server */
     function sendData(data, server)
@@ -192,7 +172,15 @@
             request.onreadystatechange = function() {
               if (this.readyState == 4)
               {
+                  if(this.status == 200)
+                  {
+                      document.getElementById("run_proc").style.display = "block";
+                      document.getElementById("quick_start").style.display = "none";
+                      document.getElementById("advanced_settings").style.display = "none";
+                  }
+                alert("Recieving data from server");
                 alert(this.responseText);
+                return this.responseText;
               }
             };
 
@@ -206,9 +194,7 @@
         {
             alert(e.toString());
         }
-    }
-
-   
+    }   
 
     /* Controling and calculating time input */
     function checkTime(time, type1)
@@ -294,7 +280,7 @@
         alert(jsonData);
 
         /* Sending data to server */
-        sendData(jsonData, "{{ url_for('start_timer') }}");
+        var response = sendData(jsonData, "{{ url_for('start_timer') }}");
     }
 
     
@@ -324,7 +310,6 @@
             {
                 return alert("Enter CPU time!");
             }
-            alert("cpu end");
         }
         else if(document.getElementById("ram_num").value != "")
         { // RAM
@@ -344,7 +329,6 @@
             {
                 return alert("Enter RAM time!");
             }
-            alert("ram end");
         }
         else if(document.getElementById("net_num").value != "")
         { // Network 
@@ -408,6 +392,14 @@
         /* Sending data to server */
         //sendData(jsonData, "{{ url_for('start_monitor') }}");
     }
+
+
+    function callFunctions()
+    {
+        var start_rcode = JSON.parse(startFormToJson());
+
+        alert(start_rcode);
+    }
 </script>
 
 <!-- DARK MODE JS -->
@@ -418,7 +410,29 @@
         document.getElementById("asc").classList.toggle("dark-mode");
         document.getElementById("h").classList.toggle("dark-mode-h");
         document.getElementById("dm_btn").classList.toggle("bgc_1");
+        document.getElementById("rp").classList.toggle("dark-mode");
     }
+</script>
+
+<!-- COUNTDOWN -->
+<script type="text/javascript">
+    var countdown_time = 1000;
+    var time_passed = 0;
+  
+    var x = setInterval(function(){
+  
+      var distance = countdown_time - time_passed;
+  
+      document.getElementById("countdown").innerHTML = distance;
+  
+      time_passed = time_passed + 1;
+  
+      if(distance < 0)
+      {
+        clearInterval(x);
+        document.getElementById("countdown").innerHTML = "Expired";
+      }
+    }, 1000);  
 </script>
 
 <!-- MODAL WINDOW -->
