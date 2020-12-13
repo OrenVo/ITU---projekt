@@ -1,5 +1,8 @@
 #!/usr/bin/python3
+import threading
+import os.path
 import json
+import psutil
 
 from datetime import timedelta
 from flask import flash, Flask, jsonify, redirect, render_template, request, Response, send_file, send_from_directory, session, url_for
@@ -7,8 +10,6 @@ from flask_login import current_user, login_required, login_user, logout_user, L
 from src.shared import User, list_users, list_processes, check_password, check_permissions, timers, monitors, get_timer_monitor, eprint
 from src.timer import Timer, Actions
 from src.resource_monitor import ResourceChecker, Monitor
-import threading
-import os.path
 
 
 app = Flask(__name__)
@@ -59,6 +60,14 @@ def start_timer():
     eprint('Timer is running')  # TODO debuging
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
+
+@app.route("/api/get/processes")
+@login_required
+def get_processes():
+    result = dict()
+    for p in psutil.process_iter():
+        result[p.pid] = p.name()
+    return json.dumps(result), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/timer/stop")
