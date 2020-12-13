@@ -4,6 +4,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='pictures/logo.png') }}"/>
         <title>Index</title>
     </head>
 
@@ -66,8 +67,9 @@
                     <!-- Launch button -->
                     <div class="quick_start_row">
                         <a onclick="startFormToJson(), settingsFormToJson()">
-                            <div id="on-off"></div>
+                            <div id="on"></div>
                         </a>
+                        <span onclick="redirect()">Redirect</span>
                         <!--<button type="submit" onclick="formToJson()">Launch</button>-->
                     </div>
                 </form>
@@ -93,7 +95,7 @@
                     <!-- RAM -->
                     <div class="advanced_settings_row">
                         When RAM load drops below: 
-                        <input type="number" placeholder="Percentage">
+                        <input type="number" id="ram_num" name="ram_num" placeholder="Percentage">
                         % for
                         <input type="text" id="ram_time" name="ram_time" placeholder="hh:mm:ss">
                     </div>
@@ -141,37 +143,24 @@
         </div>
     </body>
 
+
+<script>
+    function redirect(){
+        window.location.replace("running.html");
+    }
+</script>
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- FORM TO JSON -->
 <script type="text/javascript">
 
-    /* Create HTTP request */
-    function createXmlHttpRequestObject() {
-      var xmlhttp;
-      try {
-        xmlHttp = new XMLHttpRequest(); //should work on all browsers except IE6 or older
-      } catch (e) { 
-        try {
-          xmlHttp = new ActiveXObject("Microsoft.XMLHttp"); //browser is IE6 or older
-        } catch (e) {
-          // ignore error
-        }
-      }
-      if (!xmlHttp) {
-        alert ("Error creating the XMLHttpRequest object.");
-      } else {
-        return xmlHttp;
-      }
-    }
-
  /* Getting response from server */
  function getData(server)
     {
         try
         {
-            var request = new createXmlHttpRequestObject(); // Creating request
+            var request = new XMLHttpRequest(); // Creating request
             request.open("GET", server, true); // Inicializing request
 
             alert("Recieving data from server.");
@@ -196,46 +185,22 @@
     /* Sending data to server */
     function sendData(data, server)
     {
-        /*$(document).ready(function(){
-            const Url = server;
-            $('#on-off').click(function(){
-                $.ajax({
-                    url: Url,
-                    type: "POST",
-                    success: function(result){
-                        alert("Success");
-                        console.log(result)
-                    },
-                    error: function(error){
-                        console.log('Error ${error}')
-                    }
-                })
-            })
-        })*/
         try
         {
-            var request = new createXmlHttpRequestObject(); // Creating request
-            request.open("POST", "{{ url_for('start_timer') }}", true); // Inicializing request
+            var request = new XMLHttpRequest(); // Creating request
+
+            request.onreadystatechange = function() {
+              if (this.readyState == 4)
+              {
+                alert(this.responseText);
+              }
+            };
+
+            request.open("POST", server, true); // Inicializing request
             request.setRequestHeader("Content-Type", "application/json;"); // Setting header maybe /json
            
             alert("Sending data to server.");
             request.send(data); // Sending data
-
-            request.onload = function() {
-                alert(request.responseText);
-            };
-/*
-           request.onreadystatechange = function() 
-            {
-                alert("Recieving data");
-                if ((request.readyState == 4) && (request.status == 200)) // Response is ready
-                {
-                    alert("Ready data");
-                    alert(request.responseText);
-                    var response = JSON.parse(request.responseText);
-                    alert(response);
-                }
-            }*/
         } 
         catch (e)
         {
@@ -299,14 +264,14 @@
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
         /* Type is not set */
-        if(type1.checked === false && type2.checked === false)
+        if(type1.checked == false && type2.checked == false)
         { 
             return alert("Choose type!");
         }
 
         /* Time */
         var time_result = checkTime(time.value, type1.checked);
-        if(time_result === "error")
+        if(time_result == "error")
         {
            return alert("Enter a valid time! Format: hh:mm:ss ");           
         }
@@ -319,7 +284,7 @@
         }
 
         /* Script */
-        if(document.getElementById("script").value !== "")
+        if(document.getElementById("script").value != "")
         {
             obj.script = document.getElementById("script").value;
         }
@@ -330,9 +295,6 @@
 
         /* Sending data to server */
         sendData(jsonData, "{{ url_for('start_timer') }}");
-
-        /* Recieving response from server */
-        //getData("{{ url_for('start_timer') }}");
     }
 
     
@@ -343,9 +305,9 @@
         var type = false;
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
-        if(document.getElementById("cpu_num").value !== "")
+        if(document.getElementById("cpu_num").value != "")
         { // CPU
-            if(document.getElementById("cpu_time").value !== "")
+            if(document.getElementById("cpu_time").value != "")
             {
                 obj.resource = "CPU";                
                 obj.value = document.getElementById("cpu_num").value;
@@ -364,9 +326,9 @@
             }
             alert("cpu end");
         }
-        else if(document.getElementById("ram_num").value !== "")
+        else if(document.getElementById("ram_num").value != "")
         { // RAM
-            if(document.getElementById("ram_time").value !== "")
+            if(document.getElementById("ram_time").value != "")
             {
                 obj.resource = "RAM";
                 obj.value = document.getElementById("ram_num").value;
@@ -384,9 +346,9 @@
             }
             alert("ram end");
         }
-        else if(document.getElementById("net_num").value !== "")
+        else if(document.getElementById("net_num").value != "")
         { // Network 
-            if(document.getElementById("net_time").value !== "")
+            if(document.getElementById("net_time").value != "")
             {
                 obj.resource = "Network";
                 obj.value = document.getElementById("net_num").value;
@@ -403,7 +365,7 @@
                 return alert("Enter Network time!");
             }
         }
-        else if(document.getElementById("audio_time").value !== "")
+        else if(document.getElementById("audio_time").value != "")
         { // Audio
             obj.resource = "Audio";
             /* Time */
@@ -414,7 +376,7 @@
             }
             obj.time = time_result; // Set time into object
         }
-        else if(document.getElementById("screen_time").value !== "")
+        else if(document.getElementById("screen_time").value != "")
         { // Screen
             obj.resource = "Screen";
             /* Time */
@@ -426,12 +388,11 @@
             obj.time = time_result; // Set time into object
         }
         
-        if(document.getElementById("script").value !== "")
-        { // Script
+        /* Script */
+        if(document.getElementById("script").value != "")
+        { 
             obj.script = document.getElementById("script").value;
         }
-
-        alert("scrpt end");
 
         /* Action */
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
@@ -442,13 +403,10 @@
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
-        alert(jsonData);
+        //alert(jsonData);
 
         /* Sending data to server */
         //sendData(jsonData, "{{ url_for('start_monitor') }}");
-
-        /* Recieving response from server */
-        //getData("{{ url_for('start_monitor') }}");
     }
 </script>
 

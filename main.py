@@ -107,24 +107,51 @@ def start_monitor():  # list of monitors in json start every
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
     monitor_data = request.get_json(force=True)
-    time_sec = monitor_data['time']
-    action = Actions[monitor_data['action']]
-    resource = monitor_data['resource']
-    value = monitor_data.get('value')
-    path = monitor_data['script']
-    monitor = get_timer_monitor(monitors, current_user.name)
-    if monitor.is_running:
-        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
-    if monitor is None:
-        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
-    monitor.set_monitor(resource, value, time_sec)
-    monitor.set_action(Actions[action])
-    monitor.set_script(path)
-    t = threading.Thread(target=monitor)
-    threads.append((t, current_user, monitor))
-    t.daemon = True
-    t.run()
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    if isinstance(monitor_data, dict):
+        time_sec = monitor_data['time']
+        action = Actions[monitor_data['action']]
+        resource = monitor_data['resource']
+        value = monitor_data.get('value')
+        path = monitor_data['script']
+        _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
+        for monitor in _monitors:
+            if monitor.is_running:
+                return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+            if monitor is None:
+                return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+        if not _monitors:
+            monitor.set_monitor(resource, value, time_sec)
+            monitor.set_action(Actions[action])
+            monitor.set_script(path)
+            t = threading.Thread(target=monitor)
+            threads.append((t, current_user, monitor))
+            t.daemon = True
+            t.start()
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    else:
+        for mon_data in monitor_data:
+            time_sec = mon_data['time']
+            action = Actions[mon_data['action']]
+            resource = mon_data['resource']
+            value = mon_data.get('value')
+            path = mon_data['script']
+            _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
+            for monitor in _monitors:
+                if monitor.is_running:
+                    return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                if monitor is None:
+                    return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+            if not _monitors:
+                monitor = Monitor(current_user.name)
+                monitor.set_monitor(resource, value, time_sec)
+                monitor.set_action(Actions[action])
+                monitor.set_script(path)
+                monitors.append(monitor)
+                t = threading.Thread(target=monitor)
+                threads.append((t, current_user, monitor))
+                t.daemon = True
+                t.start()
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/monitor/stop")
@@ -133,21 +160,25 @@ def stop_monitor():
     if check_permissions(current_user.name, 1):
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
-    monitor = get_timer_monitor(monitors, current_user.name)
-    if monitor:
-        monitor.stop = True
+    _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
+    if _monitors:
+        for monitor in _monitors:
+            monitor.stop = True
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
-        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/monitor/status")
 @login_required
 def stat_monitor():
-    monitor = get_timer_monitor(monitors, current_user.name)
+    _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
+    stat_monitors = list()
+    for monitor in _monitors:
+        stat_monitors.append(monitor.get_stat())
     if monitor is None:
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
-    return json.dumps(monitor.get_stat()), 200, {'ContentType': 'application/json'}
+    return json.dumps(stat_monitors), 200, {'ContentType': 'application/json'}
 
 
 @app.route("/api/logout/")
@@ -186,8 +217,9 @@ def login():
                 break
         if user_to_login is not None:
             login_user(user_to_login)
-            timers.append(Timer(user_to_login.name))
-            monitors.append(ResourceChecker(user_to_login.name))
+            timer = get_timer_monitor(timers, user_to_login.name)
+            if not timer:
+                timers.append(Timer(user_to_login.name))
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}

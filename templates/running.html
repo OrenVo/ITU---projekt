@@ -5,6 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/running_style.css') }}" type="text/css"/>
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='pictures/logo.png') }}"/>
   <title>Running</title>
 </head>
 
@@ -29,7 +30,14 @@
     <div class="background_picture">
         <!-- Running procccess -->
         <div class="run_proc" id="rp">
-
+          <!-- Countdown -->
+          <div class="run_row">
+            <span id="countdown"></span>
+          </div>
+          <!-- Off Button -->
+          <div class="run_row">
+            <div id="off"></div>
+          </div>
         </div>
     </div>
 
@@ -43,8 +51,30 @@
 
 </body>
 
+<!-- COUNTDOWN -->
+<script type="text/javascript">
+  var countdown_time = 1000;
+  var time_passed = 0;
+
+  var x = setInterval(function(){
+
+    var distance = countdown_time - time_passed;
+
+    document.getElementById("countdown").innerHTML = distance;
+
+    time_passed = time_passed + 1;
+
+    if(distance < 0)
+    {
+      clearInterval(x);
+      document.getElementById("countdown").innerHTML = "Expired";
+    }
+  }, 1000);
+
+</script>
+
 <!-- DARK MODE JS -->
-<script>
+<script type="text/javascript">
     function dark_mode_toggle()
     {
         document.getElementById("h").classList.toggle("dark-mode-h");
