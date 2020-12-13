@@ -224,7 +224,7 @@ def login():
         else:
             return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
     else:
-        return json.dumps({'success': False}), 403, {'ContentType': 'application/json'}
+        return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
 
 @app.route("/web/login", methods=["GET", "POST"])

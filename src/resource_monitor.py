@@ -21,6 +21,10 @@ class ResourceChecker:
         self.running = False
         self.stop = False
 
+    @property
+    def is_running(self):
+        return self.running
+
     def is_set(self):
         return self.monitor is not None
 
