@@ -30,6 +30,13 @@ def index():
     return render_template('login.html')
 
 
+@app.route("/roman/")
+def roman_index():
+    if current_user.is_authenticated:
+        return render_template('rhome.html')
+    return render_template('rauthentificate.html')
+
+
 @app.route("/api/timer/start", methods=["POST"])
 @login_required
 def start_timer():
@@ -188,6 +195,13 @@ def web_logout():
     return render_template("login.html", form=request.form)
 
 
+@app.route("/roman/logout/")
+@login_required
+def roman_logout():
+    logout_user()
+    return render_template("rauthentificate.html", form=request.form)
+
+
 @app.route("/api/login", methods=["POST"])
 def login():
     log_data = request.get_json(force=True)
@@ -240,6 +254,35 @@ def web_login():
             return render_template("login.html", form=request.form)
     else:
         return render_template("login.html", form=request.form)  # TODO password
+
+
+@app.route("/roman/login", methods=["GET", "POST"])
+def roman_login():
+    if current_user.is_authenticated:
+        return render_template("rhome.html")
+    if request.method == "GET":
+        return render_template("rauthentificate.html", form=request.form)
+
+    username = request.form.get("login", None)
+    password = request.form.get("password", None)
+
+    if check_permissions(username, 4):
+        return render_template("rauthentificate.html", form=request.form)  # TODO rights
+    if check_password(username, password):
+        user_to_login = None
+        for user in users:
+            if user.id == username:
+                user_to_login = user
+                break
+        if user_to_login is not None:
+            login_user(user_to_login)
+            timers.append(Timer(user_to_login.name))
+            monitors.append(ResourceChecker(user_to_login.name))
+            return render_template("rhome.html")
+        else:
+            return render_template("rauthentificate.html", form=request.form)
+    else:
+        return render_template("rauthentificate.html", form=request.form)  # TODO password
 
 
 @app.route("/api/permissions/view")
