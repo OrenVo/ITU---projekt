@@ -1,14 +1,49 @@
 <!doctype html>
 <html>
   <head>
-    <title>Ultimate Shutdown tool 9000 eXtra</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/rroman.css"" />
+    <title>UST 9000 eXtra</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/roman_style.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../static/pictures/rlogo.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    Fuck ITU
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="modal">
+          <div class="modalContent">
+            <span class="close">&times;</span>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- TODO -->
+
+    <footer>
+      <p>
+        Created by <span class="bold">Roman Fulla &ltxfulla00&gt</span>.
+        I don't own anything on this site. All rights go to their respective owners.
+        We use cookies for login purposes. We do not track your activity in any way.
+      </p>
+    </footer>
   </body>
   <script type="text/javascript">
+    <!-- Flash -->
+    var flashModal = document.getElementsByClassName("modal")[0];
+    var flashCloseButton = document.getElementsByClassName("close")[0];
+    flashCloseButton.onclick = function() {
+      helpModal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == flashModal) {
+        helpModal.style.display = "none";
+      }
+    }
+
+    <!-- TODO -->
 
   </script>
 </html>
