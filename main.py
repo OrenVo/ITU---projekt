@@ -262,14 +262,14 @@ def roman_login():
     if current_user.is_authenticated:
         return render_template("rhome.html")
     if request.method == "GET":
-        return render_template("rauthentificate.html", form=request.form)
+        return render_template("rauthenticate.html", form=request.form)
 
     username = request.form.get("login", None)
     password = request.form.get("password", None)
 
     if check_permissions(username, 3):
         flash("You don't have permission to use this application. If you think you should have it, please contact your administrator to change it.")
-        return render_template("rauthentificate.html", form=request.form)
+        return render_template("rauthenticate.html", form=request.form)
     if check_password(username, password):
         user_to_login = None
         for user in users:
@@ -283,10 +283,10 @@ def roman_login():
             return render_template("rhome.html")
         else:
             flash("Something went wrong. Please try again.")
-            return render_template("rauthentificate.html", form=request.form)
+            return render_template("rauthenticate.html", form=request.form)
     else:
         flash("Your credentials were incorrect. Please try again.")
-        return render_template("rauthentificate.html", form=request.form)
+        return render_template("rauthenticate.html", form=request.form)
 
 
 @app.route("/api/permissions/view")
