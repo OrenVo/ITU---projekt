@@ -2,8 +2,10 @@
 <html>
   <head>
     <title>UST 9000 eXtra</title>
-    <!-- <link rel="stylesheet" type="text/css" href="../static/css/roman_style.css"/> -->
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="../static/pictures/rlogo.png"/> -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="../static/css/roman_style.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../static/pictures/rlogo.png"/>
+    -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/roman_style.css')}}"/>
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='pictures/rlogo.png')}}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +13,7 @@
   <body>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div class="modal">
+        <div class="modal flash_modal">
           <div class="modalContent">
             <span class="close">&times;</span>
             {% for message in messages %}
@@ -53,11 +55,11 @@
     var flashModal = document.getElementsByClassName("modal")[0];
     var flashCloseButton = document.getElementsByClassName("close")[0];
     flashCloseButton.onclick = function() {
-      helpModal.style.display = "none";
+      flashModal.style.display = "none";
     }
     window.onclick = function(event) {
       if (event.target == flashModal) {
-        helpModal.style.display = "none";
+        flashModal.style.display = "none";
       }
     }
     // Help
