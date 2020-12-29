@@ -34,7 +34,7 @@ def index():
 def roman_index():
     if current_user.is_authenticated:
         return render_template('rhome.html')
-    return render_template('rauthentificate.html')
+    return render_template('rauthenticate.html')
 
 
 @app.route("/api/timer/start", methods=["POST"])
@@ -200,7 +200,7 @@ def web_logout():
 def roman_logout():
     logout_user()
     flash("Invalid username. Please use only English letters & numbers. Maximum is 30 characters.")
-    return render_template("rauthentificate.html", form=request.form)
+    return render_template("rauthenticate.html", form=request.form)
 
 
 @app.route("/api/login", methods=["POST"])
