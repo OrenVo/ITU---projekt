@@ -14,8 +14,7 @@
         <header id="h">
             <div class="title">
                 Ultimate Shutdown tool 9000 eXtra
-            </div>
-            
+            </div>            
             <div class="header_settings">
                 <div id="myBtnInfo"></div>
                 <button onclick="dark_mode_toggle()" id="dm_btn">dark mode</button>
@@ -36,7 +35,7 @@
                     <h1>Start</h1>
                 </div>
                 <!-- FORM -->
-                <form id="startForm">            
+                <form id="startForm" autocomplete="on">            
                     <!-- Type -->
                     <div class="quick_start_row">
                         <label for="radio"><b>Choose type</b></label><br>
@@ -82,7 +81,7 @@
                     <h1>Advanced Settings</h1>
                 </div>
                 <!-- FORM -->
-                <form action="#" id="form_advanced_settings">
+                <form action="#" id="form_advanced_settings" autocomplete="on">
                     <!-- CPU -->
                     <div class="advanced_settings_row">
                         When CPU load drops below: 
@@ -126,20 +125,26 @@
         <!-- Running procccess -->
         <div id="run_proc" id="rp">
             <!-- Countdown title -->
-            <div class="run_row">
-                <h1>Proccess will be executed in</h1><br>
+            <div class="run_row_main">
+                <h1>Timer</h1>
             </div>
 
             <!-- Countdown timer -->
-            <div class="run_row" id="countdown">               
-            </div>
+            <div class="run_row_main" id="countdown"></div>
+
+            <div class="run_row_main"><h1>Advanced Settings</h1></div>
+            <div class="run_row_side"> Running: <span id="settingsRunning"></span></div>
+            <div class="run_row_side"> Action: <span id="settingsAction"></span></div>
+            <div class="run_row_side">Time: <span id="settingsTime"></span></div>
+            <div class="run_row_side">Value: <span id="settingsValue"></span></div>
+            
 
             <!-- Off Button -->
-            <div class="run_row">
+            <div class="run_row_main">
                 <div id="off" onclick="stopBoth()"></div>
             </div>
-          </div>
         </div>
+    </div>
 
         <!-- MODAL WINDOW INFO -->
         <div id="myModalInfo" class="modal">
@@ -151,9 +156,11 @@
     </body>
 
 <script type="text/javascript">
+    /* Calls functions to stop timers */
     function stopBoth()
     {
         stop("{{ url_for('stop_timer') }}");
+        stop("{{ url_for('stop_monitor') }}");
     }
 
     /* Stop Timer */
@@ -178,8 +185,6 @@
                 }
             };
             request.open("GET", type, true); // Inicializing request
-        
-            //alert("Sending stop request to server.");
             request.send(); // Sending data
         } 
         catch (e)
@@ -188,10 +193,10 @@
         }
     }
 
-    /* Countdown */
-    function countdown()
+    /* Countdown for advances settings*/
+    function countdownAdvanced()
     {      
-        document.getElementById("countdown").innerHTML = "None";                        
+        //document.getElementById("countdown").innerHTML = "None";                        
         try
         {
             var request = new XMLHttpRequest(); // Creating request
@@ -201,7 +206,51 @@
                     if(this.status == 200)
                     {
                         var obj = JSON.parse(this.responseText);
+                        document.getElementById("settingsRunning").innerHTML = obj.running;
+                        document.getElementById("settingsTime").innerHTML = obj.time;
+                        document.getElementById("settingsValue").innerHTML = obj.value;
+                        document.getElementById("settingsAction").innerHTML = obj.action;
+                    }
+                    else
+                    {
+                        alert("Error recieving information about advanced settings.");
+                    }                
+              }
+            };
+
+            request.open("GET", "{{ url_for('stat_monitor') }}", false); // Inicializing request                  
+            request.send(); // Sending data
+        } 
+        catch (e)
+        {
+            alert(e.toString());
+        }               
+    } 
+
+    /* Countdown */
+    function countdown()
+    {      
+        document.getElementById("countdown").innerHTML = "None";                        
+        try
+        {
+            var request = new XMLHttpRequest(); // Creating request
+            request.onreadystatechange = function() 
+            {
+                if (this.readyState == 4)
+                {
+                    if(this.status == 200)
+                    {
+                        // Turns off countdown if pressed off
+                        document.getElementById("off").addEventListener("click", ret);
+                        function ret()
+                        {
+                            time_passed = obj.time_left;
+                        }
+
+                        var obj = JSON.parse(this.responseText);
                         var time_passed = 0;
+
+                        document.getElementById("countdownAction")
     
                         /* Countdown time */
                         var x = setInterval(function()
@@ -215,8 +264,6 @@
                                 clearInterval(x);
                                 document.getElementById("countdown").innerHTML = "Expired";
                                 hideTimer();
-                                //stop("{{ url_for('stop_timer') }}");
-                                //stop("{{ url_for('start_monitor') }}");
                             }
                         }, 1000);
                     }
@@ -224,9 +271,10 @@
                     {
                         alert("Error recieving time left.");
                     }                
-              }
+                }
             };
-            request.open("GET", "{{ url_for('stat_timer') }}", false); // Inicializing request        
+
+            request.open("GET", "{{ url_for('stat_timer') }}", false); // Inicializing request                  
             request.send(); // Sending data
         } 
         catch (e)
@@ -236,7 +284,7 @@
     } 
 
     /* Controling and calculating time input */
-    function checkTime(time, type1)
+    function getTime(time, type1)
     {
         /* Entered time variables*/
         var hours = time[0] + time[1];
@@ -288,7 +336,7 @@
         var time = document.getElementById("time"); // Input for time
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
-        if(type1.checked == 0 && type2.checked == 0 && time == null)
+        if(type1.checked == false && type2.checked == false && time.value == "")
         {
             return null;
         }
@@ -300,7 +348,7 @@
         }
 
         /* Time */
-        var time_result = checkTime(time.value, type1.checked);
+        var time_result = getTime(time.value, type1.checked);
         if(time_result == "error")
         {
            return alert("Enter a valid time! Format: hh:mm:ss ");           
@@ -336,89 +384,56 @@
         && document.getElementById("net_num").value == "" && document.getElementById("audio_time").value == "" 
         && document.getElementById("screen_time").value == "" && document.getElementById("script").value == "")
         {
-            alert("advanced nic");
             return null;
         }
 
-        if(document.getElementById("cpu_num").value != "")
-        { // CPU
-            if(document.getElementById("cpu_time").value != "")
+        if(document.getElementById("cpu_num").value != "" && document.getElementById("cpu_time").value != "")
+        { // CPU           
+            obj.resource = "CPU";                
+            obj.value = document.getElementById("cpu_num").value;
+            obj.time = getTime(document.getElementById("cpu_time").value, type);
+            if(obj.time == "error")
             {
-                obj.resource = "CPU";                
-                obj.value = document.getElementById("cpu_num").value;
-
-                /* Time */
-                var time_result = checkTime(document.getElementById("cpu_time").value, type);
-                if(time_result === "error")
-                {
-                   return alert("Enter a valid time! Format: hh:mm:ss ");           
-                }
-                obj.time = time_result; // Set time into object
-            }
-            else
-            {
-                return alert("Enter CPU time!");
-            }
+               return alert("Enter a valid time! Format: hh:mm:ss ");           
+            }           
         }
-        else if(document.getElementById("ram_num").value != "")
-        { // RAM
-            if(document.getElementById("ram_time").value != "")
+        else if(document.getElementById("ram_num").value != "" && document.getElementById("ram_time").value != "")
+        { // RAM           
+            obj.resource = "RAM";
+            obj.value = document.getElementById("ram_num").value;
+            obj.time = getTime(document.getElementById("ram_time").value, type);
+            if(obj.time == "error")
             {
-                obj.resource = "RAM";
-                obj.value = document.getElementById("ram_num").value;
-                /* Time */
-                var time_result = checkTime(document.getElementById("ram_time").value, type);
-                if(time_result === "error")
-                {
-                   return alert("Enter a valid time! Format: hh:mm:ss ");           
-                }
-                obj.time = time_result; // Set time into object
-            }
-            else
-            {
-                return alert("Enter RAM time!");
-            }
+               return alert("Enter a valid time! Format: hh:mm:ss ");           
+            }            
         }
-        else if(document.getElementById("net_num").value != "")
+        else if(document.getElementById("net_num").value != "" && document.getElementById("net_time").value != "")
         { // Network 
-            if(document.getElementById("net_time").value != "")
+            obj.resource = "Network";
+            obj.value = document.getElementById("net_num").value;
+            obj.time = getTime(document.getElementById("net_time").value, type);
+            if(obj.time == "error")
             {
-                obj.resource = "Network";
-                obj.value = document.getElementById("net_num").value;
-                /* Time */
-                var time_result = checkTime(document.getElementById("net_time").value, type);
-                if(time_result === "error")
-                {
-                   return alert("Enter a valid time! Format: hh:mm:ss ");           
-                }
-                obj.time = time_result; // Set time into object
-            }
-            else
-            {
-                return alert("Enter Network time!");
-            }
+               return alert("Enter a valid time! Format: hh:mm:ss ");           
+            }            
         }
         else if(document.getElementById("audio_time").value != "")
         { // Audio
             obj.resource = "Audio";
-            /* Time */
-            var time_result = checkTime(document.getElementById("audio_time").value, type);
-            if(time_result === "error")
+            obj.time = getTime(document.getElementById("audio_time").value, type);
+            if(obj.time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }
-            obj.time = time_result; // Set time into object
         }
         else if(document.getElementById("screen_time").value != "")
         { // Screen
             obj.resource = "Screen";
-            /* Time */
-            var time_result = checkTime(document.getElementById("screen_time").value, type);
-            if(time_result === "error")
+            obj.time = getTime(document.getElementById("screen_time").value, type);
+            if(obj.time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }
-            obj.time = time_result; // Set time into object
         }
         
         /* Script */
@@ -436,7 +451,7 @@
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
-        //alert(jsonData);
+        alert(jsonData);
 
         return jsonData;
     }
@@ -454,8 +469,14 @@
                 {
                     if(this.status == 200)
                     {
-                        alert("Server response: " + this.status);
-                        countdown();
+                        if(server == "{{ url_for('start_timer') }}")
+                        {
+                            countdown();
+                        }
+                        else
+                        {
+                            setInterval(countdownAdvanced, 1000);
+                        }
                     }
                     else if(this.status == 400)
                     {
@@ -466,7 +487,14 @@
                         else
                         {
                             displayTimer();
-                            countdown();
+                            if(server == "{{ url_for('start_timer') }}")
+                            {
+                                countdown();
+                            }
+                            else
+                            {
+                                setInterval(countdownAdvanced, 1000);
+                            }
                         }
                     }
                     else
@@ -520,8 +548,13 @@
             sendData(settingsObj, "{{ url_for('start_monitor') }}");
         }
         
-        displayTimer();
+        if(startObj != null || settingsObj != null)
+        {
+            displayTimer();
+        }
     }
+
+    setInterval(countdownAdvanced, 1000);
 </script>
 
 <!-- DARK MODE JS -->

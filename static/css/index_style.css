@@ -235,14 +235,21 @@ header {
     display: none;
 }
 
-.run_row {
-    height: 100px;
+.run_row_main {
     width: 100%;
 
-    padding: 20px;
+    float: left;
+    padding: 15px;
 }
 
-#countdown {
+.run_row_side {
+    height: 50px;
+    width: 100%;
+
+    float: left;
+}
+
+#countdown, #countdownAdvanced {
     font-weight: bold;
     font-size: 2em;
     background-color: #071A1E;
