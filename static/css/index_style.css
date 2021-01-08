@@ -219,7 +219,7 @@ header {
 }
 
 /* Process div */
-#run_proc {
+.run_proc {
     height: auto;
     width: 80%;
 

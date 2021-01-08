@@ -123,7 +123,7 @@
         </div>
 
         <!-- Running procccess -->
-        <div id="run_proc" id="rp">
+        <div id="rp" class="run_proc">
             <!-- Countdown title -->
             <div class="run_row_main">
                 <h1>Timer</h1>
@@ -204,12 +204,13 @@
               if (this.readyState == 4)
               {
                     if(this.status == 200)
-                    {
+                    {                        
                         var obj = JSON.parse(this.responseText);
-                        document.getElementById("settingsRunning").innerHTML = obj.running;
-                        document.getElementById("settingsTime").innerHTML = obj.time;
-                        document.getElementById("settingsValue").innerHTML = obj.value;
-                        document.getElementById("settingsAction").innerHTML = obj.action;
+                        
+                        document.getElementById("settingsRunning").innerHTML = obj[0].running;
+                        document.getElementById("settingsTime").innerHTML = obj[0].time;
+                        document.getElementById("settingsValue").innerHTML = obj[0].value;
+                        document.getElementById("settingsAction").innerHTML = obj[0].action;
                     }
                     else
                     {
@@ -376,7 +377,7 @@
     /* SETTINGS FORM TO JSON */
     function settingsFormToJson()
     {
-        var obj = {time:null, action:null, resource:null, value:null, script:null};
+        var obj = [{time:null, action:null, resource:null, value:null, script:null}];
         var type = false;
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
@@ -389,48 +390,48 @@
 
         if(document.getElementById("cpu_num").value != "" && document.getElementById("cpu_time").value != "")
         { // CPU           
-            obj.resource = "CPU";                
-            obj.value = document.getElementById("cpu_num").value;
-            obj.time = getTime(document.getElementById("cpu_time").value, type);
-            if(obj.time == "error")
+            obj[0].resource = "CPU";                
+            obj[0].value = document.getElementById("cpu_num").value;
+            obj[0].time = getTime(document.getElementById("cpu_time").value, type);
+            if(obj[0].time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }           
         }
         else if(document.getElementById("ram_num").value != "" && document.getElementById("ram_time").value != "")
         { // RAM           
-            obj.resource = "RAM";
-            obj.value = document.getElementById("ram_num").value;
-            obj.time = getTime(document.getElementById("ram_time").value, type);
-            if(obj.time == "error")
+            obj[0].resource = "RAM";
+            obj[0].value = document.getElementById("ram_num").value;
+            obj[0].time = getTime(document.getElementById("ram_time").value, type);
+            if(obj[0].time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }            
         }
         else if(document.getElementById("net_num").value != "" && document.getElementById("net_time").value != "")
         { // Network 
-            obj.resource = "Network";
-            obj.value = document.getElementById("net_num").value;
-            obj.time = getTime(document.getElementById("net_time").value, type);
-            if(obj.time == "error")
+            obj[0].resource = "Network";
+            obj[0].value = document.getElementById("net_num").value;
+            obj[0].time = getTime(document.getElementById("net_time").value, type);
+            if(obj[0].time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }            
         }
         else if(document.getElementById("audio_time").value != "")
         { // Audio
-            obj.resource = "Audio";
-            obj.time = getTime(document.getElementById("audio_time").value, type);
-            if(obj.time == "error")
+            obj[0].resource = "Audio";
+            obj[0].time = getTime(document.getElementById("audio_time").value, type);
+            if(obj[0].time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }
         }
         else if(document.getElementById("screen_time").value != "")
         { // Screen
-            obj.resource = "Screen";
-            obj.time = getTime(document.getElementById("screen_time").value, type);
-            if(obj.time == "error")
+            obj[0].resource = "Screen";
+            obj[0].time = getTime(document.getElementById("screen_time").value, type);
+            if(obj[0].time == "error")
             {
                return alert("Enter a valid time! Format: hh:mm:ss ");           
             }
@@ -439,20 +440,20 @@
         /* Script */
         if(document.getElementById("script").value != "")
         { 
-            obj.script = document.getElementById("script").value;
+            obj[0].script = document.getElementById("script").value;
         }
 
         /* Action */
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
         for (var i = 0, element; element = action_elems[i++];) 
         {
-            obj.action = element.value;     
+            obj[0].action = element.value;     
         }
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
         alert(jsonData);
-
+        
         return jsonData;
     }
 
@@ -475,7 +476,7 @@
                         }
                         else
                         {
-                            setInterval(countdownAdvanced, 1000);
+                            setInterval(countdownAdvanced, 2000);
                         }
                     }
                     else if(this.status == 400)
@@ -493,7 +494,7 @@
                             }
                             else
                             {
-                                setInterval(countdownAdvanced, 1000);
+                                setInterval(countdownAdvanced, 2000);
                             }
                         }
                     }
@@ -517,7 +518,7 @@
     /* Displays timer */
     function displayTimer()
     {
-        document.getElementById("run_proc").style.display = "block";
+        document.getElementById("rp").style.display = "block";
         document.getElementById("quick_start").style.display = "none";
         document.getElementById("advanced_settings").style.display = "none";
     }
@@ -525,7 +526,7 @@
     /* Hide timer */
     function hideTimer()
     {
-        document.getElementById("run_proc").style.display = "none";
+        document.getElementById("rp").style.display = "none";
         document.getElementById("quick_start").style.display = "block";
         document.getElementById("advanced_settings").style.display = "block"; 
     }
@@ -554,7 +555,7 @@
         }
     }
 
-    setInterval(countdownAdvanced, 1000);
+    //setInterval(countdownAdvanced, 3000);
 </script>
 
 <!-- DARK MODE JS -->
@@ -564,8 +565,8 @@
         document.getElementById("qsc").classList.toggle("dark-mode");
         document.getElementById("asc").classList.toggle("dark-mode");
         document.getElementById("h").classList.toggle("dark-mode-h");
-        document.getElementById("dm_btn").classList.toggle("bgc_1");
         document.getElementById("rp").classList.toggle("dark-mode");
+        document.getElementById("dm_btn").classList.toggle("bgc_1");
     }
 </script>
 
