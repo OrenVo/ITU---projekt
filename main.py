@@ -116,9 +116,10 @@ def start_monitor():  # list of monitors in json start every
         _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
         for monitor in _monitors:
             if monitor.is_running:
-                return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                monitor.stop = True
+                monitors.remove(monitor)
             if monitor is None:
-                return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                monitors.remove(monitor)
         if not _monitors:
             monitor.set_monitor(resource, value, time_sec)
             monitor.set_action(Actions[action])
@@ -138,9 +139,13 @@ def start_monitor():  # list of monitors in json start every
             _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
             for monitor in _monitors:
                 if monitor.is_running:
-                    return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                    #return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                    monitor.stop = True
+                    monitors.remove(monitor)
                 if monitor is None:
-                    return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                    monitors.remove(monitor)
+                    # return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                    ...
             if not _monitors:
                 monitor = ResourceChecker(current_user.name)
                 monitor.set_monitor(resource, value, time_sec)
@@ -164,6 +169,7 @@ def stop_monitor():
     if _monitors:
         for monitor in _monitors:
             monitor.stop = True
+            monitors.remove(monitor)
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
@@ -249,7 +255,7 @@ def web_login():
         if user_to_login is not None:
             login_user(user_to_login)
             timers.append(Timer(user_to_login.name))
-            monitors.append(ResourceChecker(user_to_login.name))
+            # monitors.append(ResourceChecker(user_to_login.name))
             return render_template("index.html")
         else:
             return render_template("login.html", form=request.form)

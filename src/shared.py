@@ -22,8 +22,8 @@ shutdown_event = Event()
 Actions = {
     "Poweroff": "poweroff",
     "Reboot": "reboot",
-    "Hibernate": "",  # TBA
-    "Suspend": "",   # TBA
+    "Hibernate": "systemctl hibernate",  # TBA
+    "Suspend": "systemctl suspend",   # TBA
     "Script": None
 }
 
