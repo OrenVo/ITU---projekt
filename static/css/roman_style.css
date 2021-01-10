@@ -1,4 +1,9 @@
-/* All sites */
+/* Universal */
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
 }
@@ -14,13 +19,61 @@ body {
   color: #643502;
 }
 
+header {
+  float: left;
+  top: 0%;
+  width: 100%;
+}
+
+footer {
+    position: fixed;
+    bottom: 0%;
+    left: 0%;
+    width: 100%;
+
+    opacity: 0.8;
+
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color:  #994f02;
+    text-shadow: 0.133em 0.133em black;
+}
+
+/* Text */
+.AppName {
+  font-family: Helvetica, Arial;
+  font-style: italic;
+}
+
 .bold {
   font-weight: bold;
 }
 
-.AppName {
+mark {
+  background-color: inherit;
+
+  color: inherit;
+}
+
+h1 {
+  background-color: #221103;
+
+  font-family: monospace, Papyrus, "Lucida Handwriting", Serif;
+  font-size: 30px;
+  color: #e38608;
+
+  margin: 10px;
+}
+
+h2 {
   font-family: Helvetica, Arial;
   font-style: italic;
+  font-size: 40px;
+  color: #643502;
+
+  padding: 10px 10  px;
+
 }
 
 input[type="text"], input[type="password"] {
@@ -45,55 +98,7 @@ input[type="text"]:hover, input[type="password"]:hover {
   background-color: #994f02;
 }
 
-.modal {
-  display: none;
-  z-index: 1;
-
-  position: fixed;
-  top: 0%;
-  left: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-
-  background-color: black;
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.flash_modal {
-  display: block;
-}
-
-.modalContent {
-  width: 80%;
-  margin: 15% auto;
-  padding: 20px;
-
-  background-color: #ef8834;
-  opacity: 0.8;
-}
-
-.close {
-  float: right;
-
-  font-size: 42px;
-  font-weight: bold;
-}
-
-.close:focus {
-  cursor: pointer;
-
-  text-decoration: none;
-  color: black;
-}
-
-.close:hover {
-  cursor: pointer;
-
-  text-decoration: none;
-  color: black;
-}
-
+/* Buttons */
 button {
     cursor: pointer;
 
@@ -119,22 +124,68 @@ button:hover {
     color: #221103;
 }
 
-footer {
-    position: fixed;
-    bottom: 0%;
-    left: 0%;
-    width: 100%;
+.closeButton {
+  float: right;
+  padding-bottom: 50000px;
 
-    opacity: 0.8;
-
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    color:  #994f02;
-    text-shadow: 0.133em 0.133em black;
+  font-size: 42px;
+  font-weight: bold;
 }
 
-/* Authenticate */
+.closeButton:focus {
+  cursor: pointer;
+
+  text-decoration: none;
+  color: black;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+
+  text-decoration: none;
+  color: black;
+}
+
+.logoutButton {
+  background-color: #861003;
+}
+
+.logoutButton:hover {
+    background-color: #e38608;
+
+    color: #861003;
+}
+
+/* Modal windows */
+.modal {
+  display: none;
+  z-index: 1;
+
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+
+  background-color: black;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.modalContent {
+  width: 80%;
+  margin: 15% auto;
+  padding: 20px;
+
+  background-color: #ef8834;
+  opacity: 0.8;
+}
+
+.displayed {
+  display: block;
+}
+
+/* Authenticate page */
 .loginForm {
   position: fixed;
   top: 40%;
@@ -142,7 +193,17 @@ footer {
   text-align: center;
 }
 
-/* Home */
+/* Home page */
+
+.topMenu {
+  float: right;
+}
+
+.leftColumn {
+  float: left;
+  width: 50%;
+  height: auto;
+}
 
 
 
@@ -157,7 +218,128 @@ footer {
 
 
 
- /* The Modal (background) */
 
 
-/* Modal Content/Box */
+
+
+
+
+
+/* TODO */
+
+/* Tabs */
+/* Clock button */
+/* Submit settings*/
+
+/* Clocks */
+/* (AJAX updated) Device will turn off in --:-- */
+/* (AJAX updated) Device will turn off at --:-- */
+
+ /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+
+  background-color: yellow;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+
+  background-color: green;
+}
+
+.tabclock {
+  display: block;
+}
+
+
+.submit {
+  cursor: pointer;
+
+  float: center;
+  margin: 5px;
+  padding: 10px 20px;
+
+
+  border: none;
+  border-radius: 5px;
+
+  background-color: #221103;
+  opacity: 0.95;
+
+  font-family: Papyrus, "Lucida Handwriting", Serif;
+  font-size: 18px;
+  font-weight: bolder;
+  color: #e38608;
+
+  background-color: indigo;
+}
+
+
+.something {
+  width: 60%;
+  height: auto;
+  margin-left: 20%;
+  margin-top: 25%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.rightColumn {
+  float: right;
+  width: 50%;
+}
+
+.finalCountdown {
+  width: 60%;
+  height: auto;
+  margin-left: 20%;
+  margin-top: 25%;
+
+
+  background-color: #e38608;
+  opacity: 0.90;
+
+  border-style: solid;
+  border-color: #994f02;
+  border-width: 10px;
+
+  text-align: center;
+}

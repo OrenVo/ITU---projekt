@@ -2,50 +2,248 @@
 <html>
   <head>
     <title>UST 9000 eXtra</title>
-    <!-- <link rel="stylesheet" type="text/css" href="../static/css/roman_style.css"/> -->
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="../static/pictures/rlogo.png"/> -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/roman_style.css')}}"/>
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='pictures/rlogo.png')}}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <div class="modal" id="about">
+      <div class="modalContent">
+        <span class="closeButton" id="aboutClose">&times;</span>
+        <p>Use <span class="bold">Clock</span> to set <span class="bold">time at which</span> you want to perform an action.</p>
+        <p>Use <span class="bold">Timer</span> to set <span class="bold">how much time should pass until</span> you want to perform an action.</p>
+        <p>Use <span class="bold">Settings</span> to set <span class="bold">conditions at which </span> you want to perform an action.</p>
+        <br>
+        <p>Settings are updated at page reload. You need to <span class="bold">submit</span> changes to change them.</p>
+      </div>
+    </div>
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div class="modal">
+        <div class="modal displayed" id="flash">
           <div class="modalContent">
-            <span class="close">&times;</span>
+            <span class="closeButton" id="flashClose">&times;</span><br>
             {% for message in messages %}
-                {{ message }}
+                {{ message }}<br>
             {% endfor %}
           </div>
         </div>
       {% endif %}
     {% endwith %}
 
-    <!-- TODO -->
+    <header>
+      <div class="topMenu">
+        <button id="aboutOpen">About</button>
+        <a href="{{ url_for('roman_logout') }}"><button class="logoutButton">Logout</button></a>
+      </div>
+    </header>
+
+    <!--
+    background: #fcb936
+    text: #643502
+    dark text: #994f02
+
+    #e38608
+    #221103
+    -->
+
+    <div class="leftColumn">
+      <div class="something">
+        <div class="tab">
+          <button class="tablinks" onclick="openCity(event, 'London')">Clock</button>
+          <button class="tablinks" onclick="openCity(event, 'Paris')">Timer</button>
+          <button class="tablinks" onclick="openCity(event, 'Tokyo')">Settings</button>
+        </div>
+
+        <!-- Tab content -->
+        <div id="London" class="tabcontent tabclock">
+          <h3>Clock</h3>
+          <p>London is the capital city of England.</p>
+          <button class="submit" onclick="startCountdown('clock')">Start</button>
+        </div>
+
+        <div id="Paris" class="tabcontent">
+          <h3>Timer</h3>
+          <p>Paris is the capital of France.</p>
+          <button class="submit" onclick="startCountdown('Timer')">Start</button>
+        </div>
+
+        <div id="Tokyo" class="tabcontent">
+          <h3>Settings</h3>
+          <p>Tokyo is the capital of Japan.</p>
+          <button class="submit" onclick="changeSettings()">Submit settings</button>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="rightColumn">
+      <div class="finalCountdown">
+        <div class="finalClock">
+          <h1>Next <mark id="action">action</mark> will occur at</h1>
+          <p>Next <mark id="action">action</mark> will occur at</p>
+          <h2 id="finalClockTime">--:--:--</h2>
+        </div>
+        <div class="finalTimer">
+          <h1>Remaining time</h1>
+          <h2 id="finalTimerTime">--:--:--</h2>
+        </div>
+      </div>
+    </div>
 
     <footer>
-      <p>
-        Created by <span class="bold">Roman Fulla &ltxfulla00&gt</span>.
-        I don't own anything on this site. All rights go to their respective owners.
-        We use cookies for login purposes. We do not track your activity in any way.
-      </p>
+      <p>Created by Roman Fulla &ltxfulla00&gt.
+         I don't own anything on this site. All rights go to their respective owners.
+         We use cookies for login purposes. We do not track your activity in any way.</p>
     </footer>
   </body>
-  <script type="text/javascript">
-    // Flash
-    var flashModal = document.getElementsByClassName("modal")[0];
-    var flashCloseButton = document.getElementsByClassName("close")[0];
-    flashCloseButton.onclick = function() {
-      helpModal.style.display = "none";
+  <script type="text/javascript">7
+    // Help
+    var aboutModal = document.getElementById("about");
+    var aboutButton = document.getElementById("aboutOpen");
+    var aboutCloseButton = document.getElementById("aboutClose");
+    aboutButton.onclick = function() {
+      aboutModal.style.display = "block";
+    }
+    aboutCloseButton.onclick = function() {
+      aboutModal.style.display = "none";
     }
     window.onclick = function(event) {
-      if (event.target == flashModal) {
-        helpModal.style.display = "none";
+      if (event.target == aboutModal) {
+        aboutModal.style.display = "none";
       }
     }
 
-    // TODO
+    // Flash
+    {% if messages %}
+    var flashModal = document.getElementById("flash");
+    var flashCloseButton = document.getElementById("flashClose");
+    flashCloseButton.onclick = function() {
+      flashModal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == flashModal) {
+        flashModal.style.display = "none";
+      }
+    }
+    {% endif %}
 
+    document.getElementById("action").innerHTML = "shutdown";
+    document.getElementById("finalClockTime").innerHTML = "18:52:22";
+    document.getElementById("finalTimerTime").innerHTML = "--:--:--";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // TODO
+    function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // countdown
+    function startCountdown(type) {
+      var obj = {time:null, action:null, script:null}; // JS object
+      var time = document.getElementById("time"); // Input for time
+
+      if(time.value == "") return null;
+
+      /* Time */
+      var time_result = getTime(time.value);
+      obj.time = time_result;
+
+      /* Action */
+      for (var i = 0, element; element = action_elems[i++];)
+      {
+          obj.action = element.value;
+      }
+
+      /* Script */
+      if(document.getElementById("script").value != "")
+      {
+          obj.script = document.getElementById("script").value;
+      }
+
+      /* Create JSON string from an object */
+      var jsonData = JSON.stringify(obj);
+      if(startObj != null)
+      {
+          sendData(startObj, "{{ url_for('start_timer') }}");
+      }
+
+
+
+
+
+
+
+
+
+
+      if (type == "clock") {
+
+      }
+      else {
+
+      }
+    }
   </script>
 </html>

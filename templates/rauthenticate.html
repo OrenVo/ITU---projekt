@@ -2,27 +2,33 @@
 <html>
   <head>
     <title>UST 9000 eXtra</title>
-    <!--
-    <link rel="stylesheet" type="text/css" href="../static/css/roman_style.css"/>
-    <link rel="shortcut icon" type="image/x-icon" href="../static/pictures/rlogo.png"/>
-    -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/roman_style.css')}}"/>
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='pictures/rlogo.png')}}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <div class="modal" id="help">
+      <div class="modalContent">
+        <span class="closeButton" id="helpClose">&times;</span>
+        <p>This is browser implementation of <span class="AppName">Ultimate Shutdown Tool 9000 eXtra</span>.
+           You can use it locally through localhost or remotely by port fowarding.</p>
+        <p>Please enter your shell credentials in order to continue.</p>
+      </div>
+    </div>
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div class="modal flash_modal">
+        <div class="modal displayed" id="flash">
           <div class="modalContent">
-            <span class="close">&times;</span>
+            <span class="closeButton" id="flashClose">&times;</span><br>
             {% for message in messages %}
-                {{ message }}
+                {{ message }}<br>
             {% endfor %}
           </div>
         </div>
       {% endif %}
     {% endwith %}
+
     <div class="loginForm">
       <form action="{{ url_for('roman_login') }}" name="form" method="POST" autocomplete="on">
           <input type="text" name="login" placeholder="Your login" autocomplete="name" required><br>
@@ -32,40 +38,18 @@
           <button type="button" id="helpOpen">?</button>
       </form>
     </div>
-    <div class="modal">
-      <div class="modalContent">
-        <span class="close">&times;</span>
-        <p>
-          This is browser implementation of <span class="AppName">Ultimate Shutdown Tool 9000 eXtra</span>.
-          You can use it locally through localhost or remotely by port fowarding.
-        </p>
-        <p>Please enter your shell credentials in order to continue.</p>
-      </div>
-    </div>
+
     <footer>
-      <p>
-        Created by Roman Fulla &ltxfulla00&gt.
-        I don't own anything on this site. All rights go to their respective owners.
-        We use cookies for login purposes. We do not track your activity in any way.
-      </p>
+      <p>Created by Roman Fulla &ltxfulla00&gt.
+         I don't own anything on this site. All rights go to their respective owners.
+         We use cookies for login purposes. We do not track your activity in any way.</p>
     </footer>
   </body>
   <script type="text/javascript">
-    // Flash
-    var flashModal = document.getElementsByClassName("modal")[0];
-    var flashCloseButton = document.getElementsByClassName("close")[0];
-    flashCloseButton.onclick = function() {
-      flashModal.style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == flashModal) {
-        flashModal.style.display = "none";
-      }
-    }
     // Help
-    var helpModal = document.getElementsByClassName("modal")[1];
+    var helpModal = document.getElementById("help");
     var helpButton = document.getElementById("helpOpen");
-    var helpCloseButton = document.getElementsByClassName("close")[1];
+    var helpCloseButton = document.getElementById("helpClose");
     helpButton.onclick = function() {
       helpModal.style.display = "block";
     }
@@ -75,6 +59,18 @@
     window.onclick = function(event) {
       if (event.target == helpModal) {
         helpModal.style.display = "none";
+      }
+    }
+
+    // Flash
+    var flashModal = document.getElementById("flash");
+    var flashCloseButton = document.getElementById("flashClose");
+    flashCloseButton.onclick = function() {
+      flashModal.style.display = "none";
+    }
+    window.onclick = function(event) {
+      if (event.target == flashModal) {
+        flashModal.style.display = "none";
       }
     }
   </script>
