@@ -107,27 +107,26 @@ def start_monitor():  # list of monitors in json start every
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
     monitor_data = request.get_json(force=True)
+    _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
+    for monitor in _monitors:
+        if monitor.is_running:
+            monitor.stop = True
+            monitors.remove(monitor)
+        if monitor is None:
+            monitors.remove(monitor)
     if isinstance(monitor_data, dict):
         time_sec = monitor_data['time']
         action = Actions[monitor_data['action']]
         resource = monitor_data['resource']
         value = monitor_data.get('value')
         path = monitor_data['script']
-        _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
-        for monitor in _monitors:
-            if monitor.is_running:
-                monitor.stop = True
-                monitors.remove(monitor)
-            if monitor is None:
-                monitors.remove(monitor)
-        if not _monitors:
-            monitor.set_monitor(resource, value, time_sec)
-            monitor.set_action(Actions[action])
-            monitor.set_script(path)
-            t = threading.Thread(target=monitor)
-            threads.append((t, current_user, monitor))
-            t.daemon = True
-            t.start()
+        monitor.set_monitor(resource, value, time_sec)
+        monitor.set_action(Actions[action])
+        monitor.set_script(path)
+        t = threading.Thread(target=monitor)
+        threads.append((t, current_user, monitor))
+        t.daemon = True
+        t.start()
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     else:
         for mon_data in monitor_data:
@@ -136,26 +135,15 @@ def start_monitor():  # list of monitors in json start every
             resource = mon_data['resource']
             value = mon_data.get('value')
             path = mon_data['script']
-            _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
-            for monitor in _monitors:
-                if monitor.is_running:
-                    #return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
-                    monitor.stop = True
-                    monitors.remove(monitor)
-                if monitor is None:
-                    monitors.remove(monitor)
-                    # return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
-                    ...
-            if not _monitors:
-                monitor = ResourceChecker(current_user.name)
-                monitor.set_monitor(resource, value, time_sec)
-                monitor.set_action(action)
-                monitor.set_script(path)
-                monitors.append(monitor)
-                t = threading.Thread(target=monitor)
-                threads.append((t, current_user, monitor))
-                t.daemon = True
-                t.start()
+            monitor = ResourceChecker(current_user.name)
+            monitor.set_monitor(resource, value, time_sec)
+            monitor.set_action(action)
+            monitor.set_script(path)
+            monitors.append(monitor)
+            t = threading.Thread(target=monitor)
+            threads.append((t, current_user, monitor))
+            t.daemon = True
+            t.start()
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 

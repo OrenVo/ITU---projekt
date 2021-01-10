@@ -196,7 +196,7 @@ class ResourceChecker:
                 sed = subprocess.Popen(['sed', 'ne', "'s/^[ ]*Monitor is //p'"], stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
                 try:
-                    stdout = sed.communicate(input=stdout, timeout=15)  # [0]
+                    stdout = sed.communicate(input=stdout[0], timeout=15)[0]
                 except subprocess.TimeoutExpired as e:
                     xset.kill()
                     eprint(str(e))
