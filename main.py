@@ -318,7 +318,7 @@ def permissons_edit(username, level):
         with open(fname, 'r+') as f:
             users  = [user.rstrip() for user in f]
             rights = dict(user.rsplit(":", 1) for user in users)
-            if rights.get(current_user.name, 0) != 0:
+            if rights.get(current_user.name, 0) != '0':
                 return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
             if rights.get(username) is not None:
