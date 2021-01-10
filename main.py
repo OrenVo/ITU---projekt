@@ -17,8 +17,11 @@ app.config["SECRET_KEY"] = "c7d6ee3e38c6ce4c50aedeedcf622b9f"
 app.app_context().push()
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Website switch
 # login_manager.login_view = "index"
 login_manager.login_view = "roman_index"
+
 login_manager.login_message = "You will need to log in to gain access to this page."
 users = list_users()
 threads = list()
@@ -362,6 +365,7 @@ def make_session_permanent():
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def default_lost(path):
+    # Website switch
     '''
     if current_user.is_authenticated:
         return render_template('index.html')
