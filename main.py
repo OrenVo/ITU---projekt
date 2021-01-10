@@ -17,7 +17,8 @@ app.config["SECRET_KEY"] = "c7d6ee3e38c6ce4c50aedeedcf622b9f"
 app.app_context().push()
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "web"
+# login_manager.login_view = "index"
+login_manager.login_view = "roman_index"
 login_manager.login_message = "You will need to log in to gain access to this page."
 users = list_users()
 threads = list()
@@ -41,20 +42,20 @@ def roman_index():
 @login_required
 def start_timer():
     if check_permissions(current_user.name, 1):
-        eprint('User doesn\'t have permissions to start timer') # TODO debuging
+        eprint('User doesn\'t have permissions to start timer')  # TODO debuging
         return json.dumps({'success': False}), 401, {'ContentType': 'application/json'}
 
     timer_data = request.get_json(force=True)
     time_sec = timer_data['time']
     action = Actions[timer_data['action']]
     path = timer_data['script']
-    eprint('start_timer: JSON ok') # TODO debuging
+    eprint('start_timer: JSON ok')  # TODO debuging
     timer = get_timer_monitor(timers, current_user.name)
     if timer.is_running:
         eprint('Timer is already running')
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     if timer is None:
-        eprint('No timer found') # TODO debuging
+        eprint('No timer found')  # TODO debuging
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     timer.set_timer(time_sec)
     timer.set_action(action)
@@ -139,7 +140,7 @@ def start_monitor():  # list of monitors in json start every
             _monitors = [monitor for monitor in monitors if monitor.user == current_user.name]
             for monitor in _monitors:
                 if monitor.is_running:
-                    #return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
+                    # return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
                     monitor.stop = True
                     monitors.remove(monitor)
                 if monitor is None:
@@ -205,7 +206,7 @@ def web_logout():
 @login_required
 def roman_logout():
     logout_user()
-    flash("Invalid username. Please use only English letters & numbers. Maximum is 30 characters.")
+    flash("You have been logged off.")
     return render_template("rauthenticate.html", form=request.form)
 
 
@@ -368,6 +369,20 @@ def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=15)
     session.modified = True
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def default_lost(path):
+    '''
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    return render_template('login.html')
+    '''
+    if current_user.is_authenticated:
+        return render_template('rhome.html')
+    return render_template('rauthenticate.html')
+    # '''
 
 
 if __name__ == '__main__':
