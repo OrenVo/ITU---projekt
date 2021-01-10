@@ -17,7 +17,8 @@ app.config["SECRET_KEY"] = "c7d6ee3e38c6ce4c50aedeedcf622b9f"
 app.app_context().push()
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "web"
+# login_manager.login_view = "index"
+login_manager.login_view = "roman_index"
 login_manager.login_message = "You will need to log in to gain access to this page."
 users = list_users()
 threads = list()
@@ -193,7 +194,7 @@ def web_logout():
 @login_required
 def roman_logout():
     logout_user()
-    flash("Invalid username. Please use only English letters & numbers. Maximum is 30 characters.")
+    flash("You have been logged off.")
     return render_template("rauthenticate.html", form=request.form)
 
 
@@ -356,6 +357,20 @@ def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=15)
     session.modified = True
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def default_lost(path):
+    '''
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    return render_template('login.html')
+    '''
+    if current_user.is_authenticated:
+        return render_template('rhome.html')
+    return render_template('rauthenticate.html')
+    # '''
 
 
 if __name__ == '__main__':
