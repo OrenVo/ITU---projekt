@@ -163,13 +163,9 @@
         </div>
     </body>
 
+
+<!-- JavaScript -->
 <script type="text/javascript">
-
-    function stopTimer()
-    {
-
-
-    }
     
     /* Calls functions to stop timers */
     function stopBoth()
@@ -352,6 +348,7 @@
         var time = document.getElementById("time"); // Input for time
         var action_elems = document.querySelectorAll("#startForm select"); // Action element
 
+        /* Not defined -> function returns null */
         if(type1.checked == false && type2.checked == false && time.value == "")
         {
             return null;
@@ -360,14 +357,16 @@
         /* Type is not set */
         if(type1.checked == false && type2.checked == false)
         { 
-            return alert("Choose type!");
+            alert("Choose type!");
+            return null;
         }
 
         /* Time */
         var time_result = getTime(time.value, type1.checked);
         if(time_result == "error")
         {
-           return alert("Enter a valid time! Format: hh:mm:ss ");           
+           alert("Enter a valid time! Format: hh:mm:ss ");           
+           return null;
         }
         obj.time = time_result; // Set time into object
 
@@ -385,7 +384,7 @@
 
         /* Create JSON string from an object */
         var jsonData = JSON.stringify(obj);
-
+        alert(jsonData);
         return jsonData;
     }
 
@@ -398,7 +397,7 @@
 
         if(document.getElementById("cpu_num").value == "" && document.getElementById("ram_num").value == "" 
         && document.getElementById("net_num").value == "" && document.getElementById("audio_time").value == "" 
-        && document.getElementById("screen_time").value == "" && document.getElementById("script").value == "")
+        && document.getElementById("screen_time").value == "")
         {
             return null;
         }
@@ -435,7 +434,7 @@
         }
         else if(document.getElementById("audio_time").value != "")
         { // Audio
-            obj[0].resource = "Audio";
+            obj[0].resource = "Sound";
             obj[0].time = getTime(document.getElementById("audio_time").value, type);
             if(obj[0].time == "error")
             {
@@ -486,11 +485,11 @@
                     if(this.status == 200)
                     { 
                         if(server == "{{ url_for('start_timer') }}")
-                        {
+                        { // Timer
                             countdown();
                         }
                         else
-                        {
+                        { // Settings
                             var timer = setInterval(countdownAdvanced, 2000);
 
                             var btn = document.getElementById("off");
@@ -502,20 +501,20 @@
                         }
                     }
                     else if(this.status == 400)
-                    {
+                    { // 400 response -> application might be already running
                         if(confirm("The timer is already running.\nWould you like to stop the timer?") == true)
                         {
-                            stop("{{ url_for('stop_timer') }}");
+                            stopBoth();
                         }
                         else
                         {
                             displayTimer();
                             if(server == "{{ url_for('start_timer') }}")
-                            {
+                            { // Timer
                                 countdown();
                             }
                             else
-                            {
+                            { // Settings
                                 var timerA = setInterval(countdownAdvanced, 2000);
 
                                 var btnA = document.getElementById("off");
@@ -528,7 +527,7 @@
                         }
                     }
                     else
-                    {
+                    { // Server error
                         alert("Server response: " + this.status);                        
                     }                
                 }
