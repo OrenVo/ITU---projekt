@@ -10,14 +10,17 @@
     <div class="modal" id="help">
       <div class="modalContent">
         <span class="closeButton" id="helpClose">&times;</span>
-        <p>This is browser implementation of <span class="AppName">Ultimate Shutdown Tool 9000 eXtra</span>.
+        <p>This is browser implementation of <span class="bold">Ultimate Shutdown Tool 9000 eXtra</span>.
            You can use it locally through localhost or remotely by port fowarding.</p>
         <p>Please enter your shell credentials in order to continue.</p>
       </div>
     </div>
 
+    {% set globalMessages = [] %}
     {% with messages = get_flashed_messages() %}
       {% if messages %}
+        {% if globalMessages.append('1') %}{% endif %}
+
         <div class="modal displayed" id="flash">
           <div class="modalContent">
             <span class="closeButton" id="flashClose">&times;</span><br>
@@ -63,15 +66,17 @@
     }
 
     // Flash
-    var flashModal = document.getElementById("flash");
-    var flashCloseButton = document.getElementById("flashClose");
-    flashCloseButton.onclick = function() {
-      flashModal.style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == flashModal) {
+    {% if globalMessages %}
+      var flashModal = document.getElementById("flash");
+      var flashCloseButton = document.getElementById("flashClose");
+      flashCloseButton.onclick = function() {
         flashModal.style.display = "none";
       }
-    }
+      window.onclick = function(event) {
+        if (event.target == flashModal) {
+          flashModal.style.display = "none";
+        }
+      }
+    {% endif %}
   </script>
 </html>

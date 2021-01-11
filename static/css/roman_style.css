@@ -14,8 +14,8 @@ body {
   background-position: center;
   background-size: cover;
 
-  font-family: Papyrus, "Lucida Handwriting", Serif;
-  font-size: 20px;
+  font-family: "DejaVu Serif";
+  font-size: 25px;
   color: #643502;
 }
 
@@ -41,11 +41,6 @@ footer {
 }
 
 /* Text */
-.AppName {
-  font-family: Helvetica, Arial;
-  font-style: italic;
-}
-
 .bold {
   font-weight: bold;
 }
@@ -57,34 +52,30 @@ mark {
 }
 
 h1 {
+  margin: 10px;
+
   background-color: #221103;
 
-  font-family: monospace, Papyrus, "Lucida Handwriting", Serif;
   font-size: 30px;
   color: #e38608;
-
-  margin: 10px;
 }
 
 h2 {
-  font-family: Helvetica, Arial;
-  font-style: italic;
+  padding: 5px 5px;
+
   font-size: 40px;
-  color: #643502;
-
-  padding: 10px 10  px;
-
+  color: #221103;
 }
 
 input[type="text"], input[type="password"] {
-  width: 200%;
+  width: 150%;
   margin: 5px;
   padding: 10px;
 
   background-color: #e38608;
   opacity: 0.75;
 
-  font-family: Papyrus, "Lucida Handwriting", Serif;
+  font-family: "DejaVu Serif";
   font-size: 100%;
   font-weight: bold;
   color: #221103;
@@ -112,7 +103,7 @@ button {
     background-color: #221103;
     opacity: 0.95;
 
-    font-family: Papyrus, "Lucida Handwriting", Serif;
+    font-family: "DejaVu Serif";
     font-size: 18px;
     font-weight: bolder;
     color: #e38608;
@@ -126,7 +117,6 @@ button:hover {
 
 .closeButton {
   float: right;
-  padding-bottom: 50000px;
 
   font-size: 42px;
   font-weight: bold;
@@ -136,24 +126,18 @@ button:hover {
   cursor: pointer;
 
   text-decoration: none;
-  color: black;
+  color: #e38608;
 }
 
 .closeButton:hover {
   cursor: pointer;
 
   text-decoration: none;
-  color: black;
+  color: #e38608;
 }
 
 .logoutButton {
   background-color: #861003;
-}
-
-.logoutButton:hover {
-    background-color: #e38608;
-
-    color: #861003;
 }
 
 /* Modal windows */
@@ -194,7 +178,6 @@ button:hover {
 }
 
 /* Home page */
-
 .topMenu {
   float: right;
 }
@@ -202,28 +185,58 @@ button:hover {
 .leftColumn {
   float: left;
   width: 50%;
-  height: auto;
 }
 
+.mainMenu {
+  width: 60%;
+  margin-top: 25%;
+  margin-left: 20%;
 
+  border-style: solid;
+  border-color: #643502;
+  border-width: 10px;
 
+  background-color: #e38608;
+  opacity: 0.90;
 
+  text-align: center;
+}
 
+ /* Menu tabs */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
 
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
 
+.tab button:hover {
+  background-color: #ddd;
+}
 
+.tab button.active {
+  background-color: #ccc;
+}
 
+.tabContent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
 
-
-
-
-
-
-
-
-
-
-
+.defaultTab {
+  display: block;
+}
 
 /* TODO */
 
@@ -235,93 +248,6 @@ button:hover {
 /* (AJAX updated) Device will turn off in --:-- */
 /* (AJAX updated) Device will turn off at --:-- */
 
- /* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-
-  background-color: yellow;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-
-  background-color: green;
-}
-
-.tabclock {
-  display: block;
-}
-
-
-.submit {
-  cursor: pointer;
-
-  float: center;
-  margin: 5px;
-  padding: 10px 20px;
-
-
-  border: none;
-  border-radius: 5px;
-
-  background-color: #221103;
-  opacity: 0.95;
-
-  font-family: Papyrus, "Lucida Handwriting", Serif;
-  font-size: 18px;
-  font-weight: bolder;
-  color: #e38608;
-
-  background-color: indigo;
-}
-
-
-.something {
-  width: 60%;
-  height: auto;
-  margin-left: 20%;
-  margin-top: 25%;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 .rightColumn {
   float: right;
   width: 50%;
@@ -329,17 +255,15 @@ button:hover {
 
 .finalCountdown {
   width: 60%;
-  height: auto;
-  margin-left: 20%;
   margin-top: 25%;
+  margin-left: 20%;
 
+  border-style: solid;
+  border-color: #643502;
+  border-width: 10px;
 
   background-color: #e38608;
   opacity: 0.90;
-
-  border-style: solid;
-  border-color: #994f02;
-  border-width: 10px;
 
   text-align: center;
 }

@@ -18,8 +18,11 @@
       </div>
     </div>
 
+    {% set globalMessages = [] %}
     {% with messages = get_flashed_messages() %}
       {% if messages %}
+        {% if globalMessages.append('1') %}{% endif %}
+
         <div class="modal displayed" id="flash">
           <div class="modalContent">
             <span class="closeButton" id="flashClose">&times;</span><br>
@@ -38,57 +41,57 @@
       </div>
     </header>
 
-    <!--
-    background: #fcb936
-    text: #643502
-    dark text: #994f02
-
-    #e38608
-    #221103
-    -->
-
     <div class="leftColumn">
-      <div class="something">
+      <div class="mainMenu">
         <div class="tab">
-          <button class="tablinks" onclick="openCity(event, 'London')">Clock</button>
-          <button class="tablinks" onclick="openCity(event, 'Paris')">Timer</button>
-          <button class="tablinks" onclick="openCity(event, 'Tokyo')">Settings</button>
+          <button class="tablinks" onclick="openTab(event, 'clock')">Clock</button>
+          <button class="tablinks" onclick="openTab(event, 'timer')">Timer</button>
+          <button class="tablinks" onclick="openTab(event, 'settings')">Advanced settings</button>
         </div>
 
+
+
         <!-- Tab content -->
-        <div id="London" class="tabcontent tabclock">
-          <h3>Clock</h3>
-          <p>London is the capital city of England.</p>
+        <div id="clock" class="tabContent defaultTab">
+          <form id="clockForm" autocomplete="on">
+
+
+
+
+            <button class="submit" onclick="startCountdown('clock')">Start</button>
+          </form>
+        </div>
+
+
+        <!-- Tab content -->
+        <div id="clock" class="tabContent defaultTab">
+          <p>time form</p>
+          <p>action menu</p>
           <button class="submit" onclick="startCountdown('clock')">Start</button>
         </div>
 
-        <div id="Paris" class="tabcontent">
-          <h3>Timer</h3>
-          <p>Paris is the capital of France.</p>
+        <div id="timer" class="tabContent">
+          <p>time form</p>
+          <p>action menu</p>
           <button class="submit" onclick="startCountdown('Timer')">Start</button>
         </div>
 
-        <div id="Tokyo" class="tabcontent">
-          <h3>Settings</h3>
-          <p>Tokyo is the capital of Japan.</p>
-          <button class="submit" onclick="changeSettings()">Submit settings</button>
+        <div id="settings" class="tabContent">
+          <p>CPU form</p>
+          <p>RAM form</p>
+          <p>Network form</p>
+          <p>Audio form</p>
+          <p>Screensaver form</p>
+          <p>Script form</p>
+          <button onclick="changeSettings()">Submit settings</button>
         </div>
-
-
       </div>
     </div>
-
-
-
-
-
-
 
     <div class="rightColumn">
       <div class="finalCountdown">
         <div class="finalClock">
           <h1>Next <mark id="action">action</mark> will occur at</h1>
-          <p>Next <mark id="action">action</mark> will occur at</p>
           <h2 id="finalClockTime">--:--:--</h2>
         </div>
         <div class="finalTimer">
@@ -104,8 +107,8 @@
          We use cookies for login purposes. We do not track your activity in any way.</p>
     </footer>
   </body>
-  <script type="text/javascript">7
-    // Help
+  <script type="text/javascript">
+    // About
     var aboutModal = document.getElementById("about");
     var aboutButton = document.getElementById("aboutOpen");
     var aboutCloseButton = document.getElementById("aboutClose");
@@ -122,22 +125,19 @@
     }
 
     // Flash
-    {% if messages %}
-    var flashModal = document.getElementById("flash");
-    var flashCloseButton = document.getElementById("flashClose");
-    flashCloseButton.onclick = function() {
-      flashModal.style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == flashModal) {
+    {% if globalMessages %}
+      var flashModal = document.getElementById("flash");
+      var flashCloseButton = document.getElementById("flashClose");
+      flashCloseButton.onclick = function() {
         flashModal.style.display = "none";
       }
-    }
+      window.onclick = function(event) {
+        if (event.target == flashModal) {
+          flashModal.style.display = "none";
+        }
+      }
     {% endif %}
 
-    document.getElementById("action").innerHTML = "shutdown";
-    document.getElementById("finalClockTime").innerHTML = "18:52:22";
-    document.getElementById("finalTimerTime").innerHTML = "--:--:--";
 
 
 
@@ -155,24 +155,14 @@
 
 
 
-
-
-
-
-
-
-
-
-
-    // TODO
-    function openCity(evt, cityName) {
+    function openTab(evt, cityName) {
     // Declare all variables
-    var i, tabcontent, tablinks;
+    var i, tabContent, tablinks;
 
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
+    // Get all elements with class="tabContent" and hide them
+    tabContent = document.getElementsByClassName("tabContent");
+    for (i = 0; i < tabContent.length; i++) {
+      tabContent[i].style.display = "none";
     }
 
     // Get all elements with class="tablinks" and remove the class "active"
@@ -245,5 +235,34 @@
 
       }
     }
+
+
+    document.getElementById("action").innerHTML = "shutdown";
+    document.getElementById("finalClockTime").innerHTML = "18:52:22";
+    document.getElementById("finalTimerTime").innerHTML = "--:--:--";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   </script>
 </html>
