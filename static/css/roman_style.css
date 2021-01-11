@@ -15,7 +15,7 @@ body {
   background-size: cover;
 
   font-family: "DejaVu Serif";
-  font-size: 25px;
+  font-size: 18px;
   color: #643502;
 }
 
@@ -235,6 +235,7 @@ button:hover {
 
 .mainMenu {
   width: 80%;
+  min-height: 500px;
   margin-top: 0%;
   margin-left: 10%;
 
@@ -261,7 +262,6 @@ button:hover {
  /* Menu tabs */
 .tab {
   overflow: hidden;
-  border: 1px solid #221103;
   background-color: #221103;
 }
 
@@ -316,7 +316,15 @@ button:hover {
   float: none;
 }
 
+.anchored:hover {
+  background-color: #643502;
+
+  color: #e38608;
+}
+
 /* TODO */
+
+/* display none */
 
 /* Tabs CSS */
 /* Settings HTML */

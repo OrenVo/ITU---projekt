@@ -45,62 +45,58 @@
     <div class="leftColumn">
       <div class="mainMenu">
         <div class="tab">
-          <button class="tablinks" onclick="openTab(event, 'clock')">Clock</button>
-          <button class="tablinks" onclick="openTab(event, 'timer')">Timer</button>
-          <button class="tablinks" onclick="openTab(event, 'settings')">Advanced settings</button>
+          <button class="tabLinks" onclick="openTab(event, 'clock')">Clock</button>
+          <button class="tabLinks" onclick="openTab(event, 'timer')">Timer</button>
+          <button class="tabLinks" onclick="openTab(event, 'settings')">Advanced settings</button>
         </div>
 
         <!-- Tab content -->
         <div id="clock" class="tabContent defaultTab">
-          <form id="clockForm">
-            <div class="timeInputArea">
-              <label for="clockTime"><b>Set time</b></label><br><br>
-              <input type="text" id="clockTime" name="clockTime" placeholder="HH:MM:SS">
-            </div>
-            <div class="scriptInputArea">
-              <label for="clockScript"><b>Set script (Optional)</b></label><br><br>
-              <input type="text" id="clockScript" name="clockScript">
-            </div>
-            <div class="actionInputArea">
-              <label for="clockAction"><b>Select action</b></label><br><br>
-              <select id="clockAction" name="clockAction">
-                <option value="shutdown">Shutdown</option>
-                <option value="restart">Restart</option>
-                <option value="sleep">Sleep</option>
-                <option value="executeOnly">Execute only</option>
-              </select>
-            </div>
-            <div class="buttonArea">
-              <button class="anchored" onclick="startCountdown('clock')">Start</button>
-              <button class="anchored" onclick="stopCountdown()">Stop</button>
-            </div>
-          </form>
+          <div class="timeInputArea">
+            <label for="clockTime"><b>Set time</b></label><br><br>
+            <input type="text" id="clockTime" name="clockTime" placeholder="HH:MM:SS">
+          </div>
+          <div class="scriptInputArea">
+            <label for="clockScript"><b>Set script (Optional)</b></label><br><br>
+            <input type="text" id="clockScript" name="clockScript">
+          </div>
+          <div class="actionInputArea">
+            <label for="clockAction"><b>Select action</b></label><br><br>
+            <select id="clockAction" name="clockAction">
+              <option value="shutdown">Shutdown</option>
+              <option value="restart">Restart</option>
+              <option value="sleep">Sleep</option>
+              <option value="executeOnly">Execute only</option>
+            </select>
+          </div>
+          <div class="buttonArea">
+            <button class="anchored" onclick="startCountdown('clock')">Start</button>
+            <button class="anchored" onclick="stopCountdown()">Stop</button>
+          </div>
         </div>
 
         <div id="timer" class="tabContent">
-          <form id="timerForm">
-            <div class="timeInputArea">
-              <label for="timerTime"><b>Set time</b></label><br><br>
-              <input type="text" id="timerTime" name="timerTime" placeholder="HH:MM:SS">
-            </div>
-            <div class="scriptInputArea">
-              <label for="timerScript"><b>Set script (Optional)</b></label><br><br>
-              <input type="text" id="timerScript" name="timerScript">
-            </div>
-            <div class="actionInputArea">
-              <label for="timerAction"><b>Select action</b></label><br><br>
-              <select id="timerAction" name="timerAction">
-                <option value="shutdown">Shutdown</option>
-                <option value="restart">Restart</option>
-                <option value="sleep">Sleep</option>
-                <option value="executeOnly">Execute only</option>
-              </select>
-            </div>
-            <div class="buttonArea">
-              <button class="anchored" onclick="startCountdown('timer')">Start</button>
-              <button class="anchored" onclick="stopCountdown()">Stop</button>
-            </div>
-          </form>
+          <div class="timeInputArea">
+            <label for="timerTime"><b>Set time</b></label><br><br>
+            <input type="text" id="timerTime" name="timerTime" placeholder="HH:MM:SS">
+          </div>
+          <div class="scriptInputArea">
+            <label for="timerScript"><b>Set script (Optional)</b></label><br><br>
+            <input type="text" id="timerScript" name="timerScript">
+          </div>
+          <div class="actionInputArea">
+            <label for="timerAction"><b>Select action</b></label><br><br>
+            <select id="timerAction" name="timerAction">
+              <option value="shutdown">Shutdown</option>
+              <option value="restart">Restart</option>
+              <option value="sleep">Sleep</option>
+              <option value="executeOnly">Execute only</option>
+            </select>
+          </div>
+          <div class="buttonArea">
+            <button class="anchored" onclick="startCountdown('timer')">Start</button>
+            <button class="anchored" onclick="stopCountdown()">Stop</button>
+          </div>
         </div>
         <div id="settings" class="tabContent">
           <div class="settingsInputArea">
@@ -180,105 +176,130 @@
       }
     {% endif %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // TODO
-
     // Tabs
-    function openTab(evt, cityName) {
-    // Declare all variables
-    var i, tabContent, tablinks;
+    function openTab(evt, tabName) {
+      var i, tabContent, tabLinks;
 
-    // Get all elements with class="tabContent" and hide them
-    tabContent = document.getElementsByClassName("tabContent");
-    for (i = 0; i < tabContent.length; i++) {
-      tabContent[i].style.display = "none";
+      tabContent = document.getElementsByClassName("tabContent");
+      for (i = 0; i < tabContent.length; i++) {
+        tabContent[i].style.display = "none";
+      }
+
+      tabLinks = document.getElementsByClassName("tabLinks");
+      for (i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
     }
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-    }
-
-
-
-
-
-    // countdown
+    // Countdown
     function startCountdown(type) {
-      var obj = {time:null, action:null, script:null}; // JS object
-      var time = document.getElementById("time"); // Input for time
-
-      if(time.value == "") return null;
-
-      /* Time */
-      var time_result = getTime(time.value);
-      obj.time = time_result;
-
-      /* Action */
-      for (var i = 0, element; element = action_elems[i++];)
-      {
-          obj.action = element.value;
-      }
-
-      /* Script */
-      if(document.getElementById("script").value != "")
-      {
-          obj.script = document.getElementById("script").value;
-      }
-
-      /* Create JSON string from an object */
-      var jsonData = JSON.stringify(obj);
-      if(startObj != null)
-      {
-          sendData(startObj, "{{ url_for('start_timer') }}");
-      }
-
-
-
-
-
-
-
-
-
+      var obj = {time:null, action:null, script:null};
+      var time, actions, script;
 
       if (type == "clock") {
+        time = document.getElementById("clockTime");
+        actions = document.querySelectorAll("#clock select");
+        script = document.getElementById("clockScript");
 
+        // Time
+        if (time.value == "") return null;
+        var timeResult = getTime(time.value, true); // Clock
+        if (timeResult == "error") return alert("Invalid time format.");
+        obj.time = timeResult;
       }
-      else {
+      else {  // type == "timer"
+        time = document.getElementById("timerTime");
+        actions = document.querySelectorAll("#timer select");
+        script = document.getElementById("timerScript");
 
+        // Time
+        if (time.value == "") return null;
+        var timeResult = getTime(time.value, false); // Timer
+        if (timeResult == "error") return alert("Invalid time format.");
+        obj.time = timeResult;
+      }
+
+      // Action
+      for (var i = 0, element; element = actions[i++];) {
+          switch (element.value) {
+            case "shutdown":
+              obj.action = "Poweroff";
+              break;
+            case "restart":
+              obj.action = "Reboot";
+              break;
+            case "sleep":
+              obj.action = "Suspend";
+              break;
+            default:
+              obj.action = "Script";
+          }
+      }
+
+      // Script
+      if(script.value != "") obj.script = script.value;
+
+      var jsonData = JSON.stringify(obj);
+      alert(jsonData);
+      sendData(jsonData, "{{ url_for('start_timer') }}");
+    }
+
+    // Change Settings
+    function changeSettings() {
+      var obj = {time:null, action:null, script:null};
+
+      // TODO settingsFormToJson();
+    }
+
+    // Transforms time according to user requirements
+    function getTime(time, type) {
+      var inputSeconds = time[0] * 3600 + time[1] * 3600 + time[3] * 60 + time[4] * 60 + time[6] * 1 + time[7] * 1;
+      if (inputSeconds > 86400) return "error";
+      var regex = new RegExp("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]");
+      if (regex.test(time) === false) return "error";
+
+      var currentDate = new Date();
+      var currentSeconds = currentDate.getHours() * 3600 + currentDate.getMinutes() * 60 + currentDate.getSeconds() * 1;
+
+      if (type) { // Clock
+        var result;
+
+        if (currentSeconds > inputSeconds) result = 86400 - currentSeconds + inputSeconds;
+        else result = inputSeconds - currentSeconds;
+
+        return result;
+      }
+      else return inputSeconds; // Timer
+    }
+
+    // Sends data to server
+    function sendData(data, server) {
+      try {
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              // Success!
+            }
+            else alert("Server response: " + this.status);
+          }
+        };
+
+        request.open("POST", server, true);
+        request.setRequestHeader("Content-Type", "application/json;");
+        request.send(data);
+      }
+      catch (e) {
+        alert(e.toString());
       }
     }
 
 
-    document.getElementById("currentAction").innerHTML = "shutdown";
-    document.getElementById("finalClockTime").innerHTML = "18:52:22";
-    document.getElementById("finalTimerTime").innerHTML = "--:--:--";
+
 
 
 
