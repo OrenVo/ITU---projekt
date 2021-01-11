@@ -150,11 +150,27 @@
           <div class="modal-content">
               <span class="close">&times;</span>
               <h1>Information</h1>
+              <p>
+                  This application enables you to run a quick start, where you can choose what time is it going to be executes, and what will be the process.
+              </p><br>
+              <p>
+                  There are also "Advanced Settings", if you wish to perform more complicated operations.
+              </p><br>
+              <p>
+                  Every setting is run by clicking on the green "On" button. After submition, you will see a screen with timer and settings which you have set.
+              </p>
           </div>
         </div>
     </body>
 
 <script type="text/javascript">
+
+    function stopTimer()
+    {
+
+
+    }
+    
     /* Calls functions to stop timers */
     function stopBoth()
     {
@@ -466,16 +482,23 @@
             request.onreadystatechange = function() 
             {
                 if (this.readyState == 4)
-                {
+                { // Response ready
                     if(this.status == 200)
-                    {
+                    { 
                         if(server == "{{ url_for('start_timer') }}")
                         {
                             countdown();
                         }
                         else
                         {
-                            setInterval(countdownAdvanced, 2000);
+                            var timer = setInterval(countdownAdvanced, 2000);
+
+                            var btn = document.getElementById("off");
+                            window.onclick = function(event) {
+                              if (event.target == btn) {
+                                clearInterval(timer);
+                              }
+                            } 
                         }
                     }
                     else if(this.status == 400)
@@ -493,7 +516,14 @@
                             }
                             else
                             {
-                                setInterval(countdownAdvanced, 2000);
+                                var timerA = setInterval(countdownAdvanced, 2000);
+
+                                var btnA = document.getElementById("off");
+                                window.onclick = function(event) {
+                                  if (event.target == btnA) {
+                                    clearInterval(timerA);
+                                  }
+                                } 
                             }
                         }
                     }

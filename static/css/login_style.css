@@ -21,10 +21,10 @@ body {
 }
 
 h1 {
-    font-family: 'Courier New', Courier, monospace;
-    text-emphasis: emphas;
-    color: white;
-    text-shadow: 0px 0px 1px teal, -1px 0px 4px black;
+    font-family: Helvetica, sans-serif, 'Courier new';
+    font-weight: bold;
+    font-size: 30px;
+    color: #074750;
 }
 
 a { 
