@@ -14,6 +14,7 @@
         <p>Use <span class="bold">Timer</span> to set <span class="bold">how much time should pass until</span> you want to perform an action.</p>
         <p>Use <span class="bold">Settings</span> to set <span class="bold">conditions at which </span> you want to perform an action.</p>
         <br>
+        <p>Script executes if the conditions are met (e. g. timer has ran out). Then the action is performed.</p>
         <p>Settings are updated at page reload. You need to <span class="bold">submit</span> changes to change them.</p>
       </div>
     </div>
@@ -49,41 +50,82 @@
           <button class="tablinks" onclick="openTab(event, 'settings')">Advanced settings</button>
         </div>
 
-
-
         <!-- Tab content -->
         <div id="clock" class="tabContent defaultTab">
-          <form id="clockForm" autocomplete="on">
-
-
-
-
-            <button class="submit" onclick="startCountdown('clock')">Start</button>
+          <form id="clockForm">
+            <div class="timeInputArea">
+              <label for="clockTime"><b>Set time</b></label><br><br>
+              <input type="text" id="clockTime" name="clockTime" placeholder="HH:MM:SS">
+            </div>
+            <div class="scriptInputArea">
+              <label for="clockScript"><b>Set script (Optional)</b></label><br><br>
+              <input type="text" id="clockScript" name="clockScript">
+            </div>
+            <div class="actionInputArea">
+              <label for="clockAction"><b>Select action</b></label><br><br>
+              <select id="clockAction" name="clockAction">
+                <option value="shutdown">Shutdown</option>
+                <option value="restart">Restart</option>
+                <option value="sleep">Sleep</option>
+                <option value="executeOnly">Execute only</option>
+              </select>
+            </div>
+            <div class="buttonArea">
+              <button class="anchored" onclick="startCountdown('clock')">Start</button>
+              <button class="anchored" onclick="stopCountdown()">Stop</button>
+            </div>
           </form>
         </div>
 
-
-        <!-- Tab content -->
-        <div id="clock" class="tabContent defaultTab">
-          <p>time form</p>
-          <p>action menu</p>
-          <button class="submit" onclick="startCountdown('clock')">Start</button>
-        </div>
-
         <div id="timer" class="tabContent">
-          <p>time form</p>
-          <p>action menu</p>
-          <button class="submit" onclick="startCountdown('Timer')">Start</button>
+          <form id="timerForm">
+            <div class="timeInputArea">
+              <label for="timerTime"><b>Set time</b></label><br><br>
+              <input type="text" id="timerTime" name="timerTime" placeholder="HH:MM:SS">
+            </div>
+            <div class="scriptInputArea">
+              <label for="timerScript"><b>Set script (Optional)</b></label><br><br>
+              <input type="text" id="timerScript" name="timerScript">
+            </div>
+            <div class="actionInputArea">
+              <label for="timerAction"><b>Select action</b></label><br><br>
+              <select id="timerAction" name="timerAction">
+                <option value="shutdown">Shutdown</option>
+                <option value="restart">Restart</option>
+                <option value="sleep">Sleep</option>
+                <option value="executeOnly">Execute only</option>
+              </select>
+            </div>
+            <div class="buttonArea">
+              <button class="anchored" onclick="startCountdown('timer')">Start</button>
+              <button class="anchored" onclick="stopCountdown()">Stop</button>
+            </div>
+          </form>
         </div>
-
         <div id="settings" class="tabContent">
-          <p>CPU form</p>
-          <p>RAM form</p>
-          <p>Network form</p>
-          <p>Audio form</p>
-          <p>Screensaver form</p>
-          <p>Script form</p>
-          <button onclick="changeSettings()">Submit settings</button>
+          <div class="settingsInputArea">
+            Min CPU load <input type="number" id="cpuPercentage" name="cpuPercentage" placeholder="-">% for <input type="settingsText" id="cpuTime" name="cpuTime" placeholder="--:--:--"><br>
+            Min RAM load <input type="number" id="ramPercentage" name="ramPercentage" placeholder="-">% for <input type="settingsText" id="ramTime" name="ramTime" placeholder="--:--:--"><br>
+            Min Network transfer <input type="number" id="netPercentage" name="netPercentage" placeholder="-">kb/s for <input type="settingsText" id="netTime" name="netTime" placeholder="--:--:--"><br>
+            Min time without audio output <input type="settingsText" id="audioTime" name="audioTime" placeholder="--:--:--"><br>
+            Min time without screen output <input type="settingsText" id="videoTime" name="videoTime" placeholder="--:--:--"><br>
+          </div>
+          <div class="scriptInputArea">
+            <label for="settingsScript"><b>Set script (Optional)</b></label><br>
+            <input type="text" id="settingsScript" name="settingsScript">
+          </div>
+          <div class="actionInputArea">
+            <label for="settingsAction"><b>Select action</b></label><br>
+            <select id="settingsAction" name="settingsAction">
+              <option value="shutdown">Shutdown</option>
+              <option value="restart">Restart</option>
+              <option value="sleep">Sleep</option>
+              <option value="executeOnly">Execute only</option>
+            </select>
+          </div>
+          <div class="buttonArea">
+            <button class="anchored" onclick="changeSettings()">Submit settings</button>
+          </div>
         </div>
       </div>
     </div>
@@ -91,7 +133,7 @@
     <div class="rightColumn">
       <div class="finalCountdown">
         <div class="finalClock">
-          <h1>Next <mark id="action">action</mark> will occur at</h1>
+          <h1>Next <mark id="currentAction">action</mark> will occur at</h1>
           <h2 id="finalClockTime">--:--:--</h2>
         </div>
         <div class="finalTimer">
@@ -155,6 +197,12 @@
 
 
 
+
+
+
+    // TODO
+
+    // Tabs
     function openTab(evt, cityName) {
     // Declare all variables
     var i, tabContent, tablinks;
@@ -175,15 +223,6 @@
     document.getElementById(cityName).style.display = "block";
     evt.currentTarget.className += " active";
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -237,7 +276,7 @@
     }
 
 
-    document.getElementById("action").innerHTML = "shutdown";
+    document.getElementById("currentAction").innerHTML = "shutdown";
     document.getElementById("finalClockTime").innerHTML = "18:52:22";
     document.getElementById("finalTimerTime").innerHTML = "--:--:--";
 

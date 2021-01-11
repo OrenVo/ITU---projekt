@@ -67,7 +67,53 @@ h2 {
   color: #221103;
 }
 
-input[type="text"], input[type="password"] {
+/* HERE */
+input[type="text"] {
+  width: 50%;
+  margin: 5px;
+  padding: 10px;
+
+  background-color: #e38608;
+  opacity: 0.75;
+
+  font-family: "DejaVu Serif";
+  font-size: 100%;
+  font-weight: bold;
+  color: #221103;
+  text-align: center;
+}
+
+/* HERE */
+input[type="number"] {
+  width: 15%;
+
+  background-color: #e38608;
+  opacity: 0.75;
+
+  font-family: "DejaVu Serif";
+  font-size: 100%;
+  font-weight: bold;
+  color: #221103;
+  text-align: center;
+}
+
+/* HERE */
+input[type="settingsText"] {
+  width: 25%;
+  margin: 5px;
+  padding: 10px;
+
+  background-color: #e38608;
+  opacity: 0.75;
+
+  font-family: "DejaVu Serif";
+  font-size: 100%;
+  font-weight: bold;
+  color: #221103;
+  text-align: center;
+}
+
+input[type="login"], input[type="password"] {
   width: 150%;
   margin: 5px;
   padding: 10px;
@@ -81,11 +127,11 @@ input[type="text"], input[type="password"] {
   color: #221103;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="number"]:focus, input[type="settingsText"]:focus, input[type="login"]:focus, input[type="password"]:focus {
   background-color: #994f02;
 }
 
-input[type="text"]:hover, input[type="password"]:hover {
+input[type="text"]:hover, input[type="number"]:hover, input[type="settingsText"]:hover, input[type="login"]:hover, input[type="password"]:hover {
   background-color: #994f02;
 }
 
@@ -188,9 +234,9 @@ button:hover {
 }
 
 .mainMenu {
-  width: 60%;
-  margin-top: 25%;
-  margin-left: 20%;
+  width: 80%;
+  margin-top: 0%;
+  margin-left: 10%;
 
   border-style: solid;
   border-color: #643502;
@@ -202,11 +248,21 @@ button:hover {
   text-align: center;
 }
 
+
+
+
+
+
+
+
+
+
+
  /* Menu tabs */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: 1px solid #221103;
+  background-color: #221103;
 }
 
 .tab button {
@@ -230,7 +286,7 @@ button:hover {
 .tabContent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #221103;
   border-top: none;
 }
 
@@ -238,15 +294,60 @@ button:hover {
   display: block;
 }
 
+.timeInputArea {
+  margin-top: 2.5%;
+  margin-bottom: 5%;
+}
+
+.scriptInputArea {
+  margin-bottom: 5%;
+}
+
+.actionInputArea {
+  margin-bottom: 15%;
+}
+
+.settingsInputArea {
+  margin-top: 2.5%;
+  margin-bottom: 5%;
+}
+
+.anchored {
+  float: none;
+}
+
 /* TODO */
 
-/* Tabs */
-/* Clock button */
-/* Submit settings*/
+/* Tabs CSS */
+/* Settings HTML */
+/* Settings CSS */
 
-/* Clocks */
+/* JS */
+
+/* if running hide start else hide stop */
 /* (AJAX updated) Device will turn off in --:-- */
 /* (AJAX updated) Device will turn off at --:-- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .rightColumn {
   float: right;
@@ -254,9 +355,9 @@ button:hover {
 }
 
 .finalCountdown {
-  width: 60%;
+  width: 80%;
   margin-top: 25%;
-  margin-left: 20%;
+  margin-left: 10%;
 
   border-style: solid;
   border-color: #643502;
