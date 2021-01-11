@@ -243,7 +243,6 @@
       if(script.value != "") obj.script = script.value;
 
       var jsonData = JSON.stringify(obj);
-      alert(jsonData);
       sendData(jsonData, "{{ url_for('start_timer') }}");
     }
 
@@ -251,12 +250,12 @@
     function changeSettings() {
       var obj = {time:null, action:null, script:null};
 
-      // TODO settingsFormToJson();
+      // TODO
     }
 
     // Transforms time according to user requirements
     function getTime(time, type) {
-      var inputSeconds = time[0] * 3600 + time[1] * 3600 + time[3] * 60 + time[4] * 60 + time[6] * 1 + time[7] * 1;
+      var inputSeconds = time[0] * 3600 * 10 + time[1] * 3600 + time[3] * 60 * 10 + time[4] * 60 + time[6] * 1 * 10 + time[7] * 1;
       if (inputSeconds > 86400) return "error";
       var regex = new RegExp("[0-2][0-9]:[0-5][0-9]:[0-5][0-9]");
       if (regex.test(time) === false) return "error";
@@ -298,31 +297,69 @@
       }
     }
 
+    function stopCountdown() {
+      try {
+        var request = new XMLHttpRequest();
 
+        request.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              alert("Countdown has been stopped.");
+            }
+            else alert("Server response: " + this.status);
+          }
+        };
 
+        request.open("GET", "{{ url_for('stop_timer') }}", true);
+        request.send();
+      }
+      catch (e) {
+        alert(e.toString());
+      }
 
+      try {
+        var request = new XMLHttpRequest();
 
+        request.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              alert("Countdown has been stopped.");
+            }
+            else alert("Server response: " + this.status);
+          }
+        };
 
+        request.open("GET", "{{ url_for('stop_monitor') }}", true);
+        request.send();
+      }
+      catch (e) {
+        alert(e.toString());
+      }
+    }
 
+    /*
+    setInterval(updateFinalCountdown(), 1000);
+    function updateFinalCountdown() {
+      try {
+        var request = new XMLHttpRequest();
 
+        request.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
 
+              var responseVal = this.responseText;
+            }
+            else alert("Server response: " + this.status);
+          }
+        };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        request.open("GET", "{{ url_for('stat_timer') }}", false);
+        request.send();
+      }
+      catch (e) {
+        alert(e.toString());
+      }
+    }
+    */
   </script>
 </html>

@@ -276,8 +276,9 @@ def roman_login():
                 break
         if user_to_login is not None:
             login_user(user_to_login)
-            timers.append(Timer(user_to_login.name))
-            monitors.append(ResourceChecker(user_to_login.name))
+            timer = get_timer_monitor(timers, user_to_login.name)
+            if not timer:
+                timers.append(Timer(user_to_login.name))
             return render_template("rhome.html")
         else:
             flash("Something went wrong. Please try again.")
